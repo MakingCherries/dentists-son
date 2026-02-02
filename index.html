@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dentist's Son | Cape Cod's Original FODMAP-Friendly Spice Rubs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Source+Sans+3:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #1a2744; }
+    button:hover { opacity: 0.85; transform: translateY(-1px); }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0f1829; }
+    ::-webkit-scrollbar-thumb { background: rgba(201,162,39,0.3); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(201,162,39,0.5); }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+const { useState } = React;
+
+// Spice data
+const spices = [
+  { id: 'black-kettle', name: 'Black Kettle', subtitle: 'FOR BEEF', description: 'Deep, smoky complexity with espresso undertones. Named for the iron kettles of Sandwich\'s glass factory.', ingredients: 'Smoked Paprika • Black Pepper • Kosher Salt • Cumin • Coriander • Mustard Powder • Espresso Powder • Cayenne • Thyme • Cinnamon', bestFor: ['Brisket', 'Ribeye', 'Tri-tip', 'Burgers', 'Ribs'], price: 14.99 },
+  { id: 'sugar-sand', name: 'Sugar Sand', subtitle: 'FOR PORK', description: 'Sweet maple meets smoky heat—inspired by the soft white sands of Town Neck Beach.', ingredients: 'Smoked Paprika • Maple Sugar • Kosher Salt • Black Pepper • Cumin • Mustard Powder • Sage • Cayenne • Allspice • Cloves', bestFor: ['Ribs', 'Pork Shoulder', 'Tenderloin', 'Chops'], price: 14.99 },
+  { id: 'bayside', name: 'Bayside', subtitle: 'FOR CHICKEN', description: 'Bright Mediterranean notes with golden turmeric warmth. Like summer on Cape Cod Bay.', ingredients: 'Smoked Paprika • Kosher Salt • Black Pepper • Oregano • Thyme • Cumin • Coriander • Lemon Zest • Turmeric • Cayenne', bestFor: ['Whole Chicken', 'Thighs', 'Drumsticks', 'Wings'], price: 14.99 },
+  { id: 'dockside', name: 'Dockside', subtitle: 'FOR FISH', description: 'Delicate herbs and bright citrus. Crafted for the catch that built Cape Cod.', ingredients: 'Lemon Zest • Kosher Salt • White Pepper • Dill • Parsley • Celery Seed • Coriander • Sweet Paprika • Chives', bestFor: ['Cod', 'Haddock', 'Salmon', 'Scallops', 'Shrimp'], price: 14.99 },
+  { id: 'the-95', name: "The '95", subtitle: 'CHAMPIONSHIP HEAT', description: 'Ghost pepper fire tempered with smoky depth—named for the Kettleers\' championship summer.', ingredients: 'Smoked Paprika • Chipotle • Kosher Salt • Cayenne • Black Pepper • Cumin • Coriander • Mustard Powder • Ghost Pepper • Cinnamon', bestFor: ['Wings', 'Ribs', 'Brisket'], price: 15.99 },
+  { id: 'far-shore', name: 'Far Shore', subtitle: 'ASIAN-INSPIRED', description: 'Sesame and ginger with orange zest—where East meets the Eastern shore.', ingredients: 'Sesame Seeds • Ginger • Kosher Salt • White Pepper • Coriander • Orange Zest • Five Spice • Mustard Powder • Cayenne', bestFor: ['Salmon', 'Tuna', 'Chicken', 'Stir-fry'], price: 14.99 }
+];
+
+// 48 detailed recipes with full ingredients and instructions
+const recipes = [
+  // BLACK KETTLE - BEEF (Recipes 1-10)
+  { 
+    id: 1, title: 'Championship Smoked Brisket', spice: 'black-kettle', protein: 'beef', method: 'smoke', time: '12-14 hours', difficulty: 'Advanced', servings: '12-15',
+    description: 'Low and slow perfection with a bark that wins trophies.',
+    ingredients: ['1 whole packer brisket (12-15 lbs)', '1/2 cup Black Kettle rub', '2 tbsp yellow mustard', '1 cup beef broth', '1/4 cup apple cider vinegar', 'Butcher paper'],
+    instructions: ['Trim brisket, leaving 1/4 inch fat cap. Apply mustard as binder.', 'Coat generously with Black Kettle rub on all sides.', 'Refrigerate uncovered overnight (8-12 hours).', 'Smoke at 225°F using oak or hickory wood.', 'Spritz with broth/vinegar mix every 90 min after hour 3.', 'Wrap in butcher paper when bark sets (around 165°F).', 'Continue smoking until 203°F and probe tender.', 'Rest wrapped for 2 hours minimum before slicing.'],
+    tips: 'The stall at 150-170°F can last hours. Be patient and trust the process!'
+  },
+  { 
+    id: 2, title: 'Smash Burgers', spice: 'black-kettle', protein: 'beef', method: 'pan', time: '15 min', difficulty: 'Easy', servings: '4',
+    description: 'Crispy edges, beefy flavor, championship satisfaction.',
+    ingredients: ['1 lb ground beef (80/20)', '2 tbsp Black Kettle rub', '4 slices American cheese', '4 brioche buns, toasted', '2 tbsp butter', 'Kosher salt', 'Pickles and special sauce'],
+    instructions: ['Divide beef into 8 loose 2oz balls - do not pack tight.', 'Season balls with Black Kettle rub.', 'Heat cast iron until smoking hot (5 minutes).', 'Add butter, place balls with space between.', 'Smash flat immediately with spatula, hold 10 seconds.', 'Cook 2-3 min without moving until edges crisp.', 'Flip, add cheese to half, cook 1 more minute.', 'Stack patties and serve on toasted buns.'],
+    tips: 'The key is a screaming hot pan and not touching the burger after smashing!'
+  },
+  { 
+    id: 3, title: 'Reverse Sear Ribeye', spice: 'black-kettle', protein: 'beef', method: 'oven', time: '1 hour', difficulty: 'Intermediate', servings: '2',
+    description: 'Steakhouse quality—edge-to-edge perfection with a beautiful crust.',
+    ingredients: ['2 ribeye steaks (1.5" thick, 1 lb each)', '2 tbsp Black Kettle rub', '3 tbsp butter', '4 garlic cloves, smashed', '4 sprigs fresh thyme', '2 sprigs rosemary', 'Flaky sea salt'],
+    instructions: ['Remove steaks from fridge 45 min early. Pat completely dry.', 'Season generously with Black Kettle on all sides.', 'Place on wire rack over baking sheet.', 'Bake at 250°F until internal temp reaches 115°F.', 'Heat cast iron over high heat for 5 minutes.', 'Add butter, sear steaks 45-60 seconds per side.', 'Add remaining butter, garlic, herbs. Baste 30 seconds per side.', 'Rest 5 minutes, finish with flaky salt.'],
+    tips: 'Use an instant-read thermometer for perfect results every time.'
+  },
+  { 
+    id: 4, title: 'Grilled Tri-Tip', spice: 'black-kettle', protein: 'beef', method: 'grill', time: '45 min', difficulty: 'Intermediate', servings: '6',
+    description: 'Santa Maria style meets Cape Cod smoke.',
+    ingredients: ['1 tri-tip roast (2.5-3 lbs)', '3 tbsp Black Kettle rub', '2 tbsp olive oil', '1 tbsp garlic-infused oil', 'Flaky sea salt', 'Fresh cracked pepper'],
+    instructions: ['Trim excess fat and silver skin from tri-tip.', 'Rub with oils, then coat with Black Kettle.', 'Rest at room temperature 30-45 minutes.', 'Set up grill for two-zone cooking.', 'Sear over high heat 4-5 min per side.', 'Move to indirect heat until 130°F internal (20-25 min).', 'Rest 10 minutes, then slice thin against the grain.', 'Finish with flaky salt and pepper.'],
+    tips: 'Tri-tip has two grain directions - cut in half where grain changes, slice each separately.'
+  },
+  { 
+    id: 5, title: 'Beef Short Ribs', spice: 'black-kettle', protein: 'beef', method: 'smoke', time: '8-10 hours', difficulty: 'Advanced', servings: '6',
+    description: 'Brisket-like bark on the most forgiving cut.',
+    ingredients: ['1 rack beef plate short ribs (4 bones, ~5 lbs)', '1/4 cup Black Kettle rub', '2 tbsp yellow mustard', '1 cup beef broth', '2 tbsp butter', 'Butcher paper'],
+    instructions: ['Trim excess fat from top, leave membrane between bones.', 'Apply mustard binder, coat generously with rub.', 'Refrigerate overnight for best results.', 'Smoke at 275°F bone-side down.', 'Smoke 5-6 hours until bark sets and temp hits 170°F.', 'Wrap in paper with butter, return to smoker.', 'Cook until probe tender (203-210°F).', 'Rest 30 minutes, slice between bones to serve.'],
+    tips: 'Beef short ribs are forgiving - when in doubt, cook longer!'
+  },
+  { 
+    id: 6, title: 'Cast Iron Flank Steak', spice: 'black-kettle', protein: 'beef', method: 'pan', time: '20 min', difficulty: 'Easy', servings: '4',
+    description: 'Quick-cooking cut with maximum flavor.',
+    ingredients: ['1.5 lb flank steak', '2 tbsp Black Kettle rub', '2 tbsp olive oil', '2 tbsp butter', '1 tbsp garlic-infused oil', 'Fresh parsley', 'Flaky sea salt'],
+    instructions: ['Score flank in crosshatch pattern, 1/8" deep both sides.', 'Rub with olive oil, coat with Black Kettle.', 'Rest at room temperature 20 minutes.', 'Heat cast iron over high heat 5 minutes until smoking.', 'Sear 4 minutes per side without moving.', 'Add butter and garlic oil, baste 30 seconds.', 'Rest 10 minutes on cutting board.', 'Slice very thin against the grain at 45° angle.'],
+    tips: 'Slicing against the grain is crucial - cut perpendicular to visible lines.'
+  },
+  { 
+    id: 7, title: 'Beef Kebabs', spice: 'black-kettle', protein: 'beef', method: 'grill', time: '25 min', difficulty: 'Easy', servings: '6',
+    description: 'Perfect for beach house gatherings.',
+    ingredients: ['2 lbs sirloin, cut into 1.5" cubes', '3 tbsp Black Kettle rub', '3 tbsp olive oil', '2 bell peppers, 1.5" pieces', '1 large zucchini, 1" slices', '8 oz cremini mushrooms', 'Metal skewers'],
+    instructions: ['Cut sirloin into uniform 1.5" cubes.', 'Toss beef with oil and Black Kettle. Marinate 30 min - 2 hours.', 'Toss vegetables with oil and pinch of salt.', 'Thread beef and vegetables onto skewers, alternating.', 'Preheat grill to high (450-500°F).', 'Grill 8-10 min total, turning every 2-3 minutes.', 'Cook to medium-rare (130°F internal).', 'Rest 3 minutes, garnish with fresh herbs.'],
+    tips: 'Keep meat and vegetables on separate skewers for better control.'
+  },
+  { 
+    id: 8, title: 'Smoked Beef Cheeks', spice: 'black-kettle', protein: 'beef', method: 'smoke', time: '6-8 hours', difficulty: 'Advanced', servings: '6',
+    description: 'The pitmaster\'s secret—meltingly tender.',
+    ingredients: ['4 beef cheeks (~3 lbs total)', '3 tbsp Black Kettle rub', '2 cups beef broth', '1 cup red wine (optional)', '2 tbsp tomato paste', '4 sprigs thyme', '2 bay leaves', 'Corn tortillas'],
+    instructions: ['Trim silver skin and excess fat from cheeks.', 'Season generously with Black Kettle on all sides.', 'Refrigerate uncovered 4 hours or overnight.', 'Smoke at 275°F for 3 hours until nice bark forms.', 'Transfer to Dutch oven with broth, wine, paste, herbs.', 'Cover tightly, return to smoker 3-4 more hours.', 'Remove when fork-tender. Rest 15 minutes.', 'Strain and reduce liquid. Shred or slice meat for tacos.'],
+    tips: 'Beef cheeks are incredibly rich - perfect for tacos or over polenta.'
+  },
+  { 
+    id: 9, title: 'Black Kettle Meatloaf', spice: 'black-kettle', protein: 'beef', method: 'oven', time: '1.5 hours', difficulty: 'Easy', servings: '8',
+    description: 'Comfort food elevated with smoky depth.',
+    ingredients: ['2 lbs ground beef (80/20)', '3 tbsp Black Kettle rub', '1 cup breadcrumbs', '2 eggs, beaten', '1/2 cup lactose-free milk', '1/4 cup fresh parsley', '1/2 cup ketchup', '2 tbsp brown sugar', '1 tbsp Dijon mustard'],
+    instructions: ['Preheat oven to 350°F. Line baking sheet with parchment.', 'Combine breadcrumbs and milk, let soak 5 minutes.', 'Add beef, Black Kettle, eggs, parsley. Mix gently.', 'Form into 9x5" loaf on prepared sheet.', 'Mix ketchup, brown sugar, Dijon for glaze.', 'Spread half the glaze on top.', 'Bake 45 min, add remaining glaze, bake 20-30 more min to 160°F.', 'Rest 10 minutes before slicing.'],
+    tips: 'Add 2 tbsp tomato paste to the meat mixture for extra moisture.'
+  },
+  { 
+    id: 10, title: 'Steak Tips', spice: 'black-kettle', protein: 'beef', method: 'grill', time: '20 min', difficulty: 'Easy', servings: '4',
+    description: 'A New England pub classic.',
+    ingredients: ['2 lbs sirloin tips, 2" chunks', '3 tbsp Black Kettle rub', '3 tbsp olive oil', '2 tbsp Worcestershire sauce', '1 tbsp garlic-infused oil', '2 bell peppers, sliced', 'Fresh parsley'],
+    instructions: ['Cut sirloin into even 2" chunks.', 'Combine oils, Worcestershire, and Black Kettle.', 'Toss tips in marinade, rest 30 min - 2 hours.', 'Preheat grill to high heat.', 'Grill tips 3-4 min per side for medium-rare.', 'While tips rest, quickly grill pepper strips.', 'Toss tips and peppers together.', 'Garnish with parsley and serve immediately.'],
+    tips: 'Sirloin tips (flap meat) are the traditional cut - incredibly flavorful!'
+  },
+  // SUGAR SAND - PORK (Recipes 11-18)
+  { 
+    id: 11, title: 'Cape Cod Pulled Pork', spice: 'sugar-sand', protein: 'pork', method: 'smoke', time: '10-12 hours', difficulty: 'Intermediate', servings: '16-20',
+    description: 'Sweet maple bark with pullable perfection.',
+    ingredients: ['1 bone-in pork shoulder (8-10 lbs)', '1/2 cup Sugar Sand rub', '2 tbsp yellow mustard', '1 cup apple juice', '1/4 cup apple cider vinegar', '4 tbsp butter', 'Brioche buns', 'Coleslaw'],
+    instructions: ['Score fat cap in crosshatch pattern, 1/4" deep.', 'Apply mustard binder, coat generously with Sugar Sand.', 'Refrigerate uncovered overnight.', 'Smoke at 250°F using apple or cherry wood.', 'Spritz with apple juice mix every hour after hour 3.', 'Wrap in foil with butter at 165°F internal.', 'Continue until 203-205°F and probe slides in easily.', 'Rest 1-4 hours in cooler (no ice). Pull and serve on buns.'],
+    tips: 'The bone should slide out cleanly when perfectly done!'
+  },
+  { 
+    id: 12, title: 'Maple Sage Tenderloin', spice: 'sugar-sand', protein: 'pork', method: 'oven', time: '35 min', difficulty: 'Easy', servings: '4',
+    description: 'Elegant enough for company, easy enough for Tuesday.',
+    ingredients: ['2 pork tenderloins (~1 lb each)', '2 tbsp Sugar Sand rub', '2 tbsp olive oil', '3 tbsp butter', '2 tbsp maple syrup', '6 fresh sage leaves', '1 tbsp Dijon mustard'],
+    instructions: ['Remove silver skin from tenderloins.', 'Pat dry, season all over with Sugar Sand.', 'Rest at room temperature 20 minutes.', 'Preheat oven to 400°F.', 'Heat olive oil in oven-safe skillet over high heat.', 'Sear all sides until golden brown, about 6-8 min total.', 'Add butter, maple syrup, sage, Dijon. Baste pork.', 'Roast until 145°F (15-18 min). Rest 8-10 min, slice into medallions.'],
+    tips: 'Pork tenderloin is very lean - don\'t overcook! 145°F with slight pink is perfect.'
+  },
+  { 
+    id: 13, title: 'Competition Ribs', spice: 'sugar-sand', protein: 'pork', method: 'smoke', time: '6 hours', difficulty: 'Intermediate', servings: '4-6',
+    description: 'Fall-off-the-bone tender with a sweet maple glaze.',
+    ingredients: ['2 racks St. Louis spare ribs (~3 lbs each)', '1/4 cup Sugar Sand rub', '4 tbsp butter, cubed', '1/4 cup maple syrup', '2 tbsp brown sugar', '1/4 cup apple juice', '1/2 cup BBQ sauce (FODMAP-friendly)'],
+    instructions: ['Remove membrane from bone side using paper towel.', 'Apply Sugar Sand generously both sides. Refrigerate 2+ hours.', 'Smoke at 250°F using apple or cherry wood for 3 hours.', 'Wrap in foil with butter, syrup, sugar, and juice.', 'Return to smoker for 2 hours.', 'Unwrap, save juices. Brush with BBQ sauce mixed with juices.', 'Smoke 1 more hour until sauce is tacky.', 'Rest 10 min, slice between bones.'],
+    tips: '3-2-1 method works great for spare ribs. For baby backs, try 2-2-1.'
+  },
+  { 
+    id: 14, title: 'Grilled Pork Chops', spice: 'sugar-sand', protein: 'pork', method: 'grill', time: '25 min', difficulty: 'Easy', servings: '4',
+    description: 'Thick-cut with caramelized edges.',
+    ingredients: ['4 bone-in pork chops (1.5" thick)', '2 tbsp Sugar Sand rub', '2 tbsp olive oil', '2 tbsp butter', '1 tbsp fresh rosemary, chopped', '1 tbsp maple syrup', 'Flaky sea salt'],
+    instructions: ['Remove chops from fridge 30 min before grilling.', 'Pat dry, rub with olive oil on all sides.', 'Season generously with Sugar Sand.', 'Preheat grill for two-zone cooking.', 'Sear over high heat 2-3 min per side until charred.', 'Move to medium heat, close lid, cook to 140°F internal.', 'Rest 5 minutes (carryover brings to 145°F).', 'Drizzle with maple-rosemary butter, finish with flaky salt.'],
+    tips: 'Brining chops 1-2 hours in salt-sugar solution makes them extra juicy!'
+  },
+  { 
+    id: 15, title: 'Pork Belly Burnt Ends', spice: 'sugar-sand', protein: 'pork', method: 'smoke', time: '4 hours', difficulty: 'Intermediate', servings: '8',
+    description: 'Meat candy—impossibly rich, sweet, and smoky.',
+    ingredients: ['3 lbs pork belly, skin removed', '3 tbsp Sugar Sand rub', '4 tbsp butter, cubed', '1/4 cup maple syrup', '1/4 cup brown sugar', '1/2 cup BBQ sauce (FODMAP-friendly)', 'Toothpicks'],
+    instructions: ['Cut pork belly into 1.5" cubes.', 'Season all sides with Sugar Sand.', 'Smoke at 275°F using apple or cherry wood.', 'Spread cubes in single layer, not touching. Smoke 2 hours.', 'Transfer to foil pan with butter, syrup, sugar. Toss.', 'Cover with foil, return to smoker 1 hour.', 'Remove foil, add BBQ sauce, toss gently.', 'Smoke uncovered 30-45 min until sticky and caramelized.'],
+    tips: 'When done, they should jiggle like jello with a glossy glaze!'
+  },
+  { 
+    id: 16, title: 'Stuffed Pork Loin', spice: 'sugar-sand', protein: 'pork', method: 'oven', time: '1.5 hours', difficulty: 'Intermediate', servings: '8',
+    description: 'Holiday table centerpiece with incredible flavor.',
+    ingredients: ['1 boneless pork loin (4 lbs)', '3 tbsp Sugar Sand rub', '4 cups fresh spinach', '1/2 cup sun-dried tomatoes, chopped', '4 oz goat cheese', '2 tbsp olive oil', '2 tbsp butter', 'Kitchen twine'],
+    instructions: ['Butterfly pork loin: cut horizontally leaving 1/2" attached.', 'Pound between plastic to 1" even thickness.', 'Season inside with 1 tbsp Sugar Sand.', 'Layer spinach, sun-dried tomatoes, crumbled goat cheese.', 'Roll tightly, tie with twine at 1" intervals.', 'Season outside with remaining rub.', 'Sear all sides in olive oil, add butter, transfer to 375°F oven.', 'Roast to 145°F (45-55 min). Rest 15 min, remove twine, slice.'],
+    tips: 'Chill the stuffed loin 30 min before cooking to help hold shape.'
+  },
+  { 
+    id: 17, title: 'Pork Steaks', spice: 'sugar-sand', protein: 'pork', method: 'grill', time: '30 min', difficulty: 'Easy', servings: '4',
+    description: 'Midwest classic meets New England maple.',
+    ingredients: ['4 pork steaks (shoulder, 3/4" thick)', '2 tbsp Sugar Sand rub', '2 tbsp olive oil', '1/2 cup apple cider', '2 tbsp butter', '1 tbsp maple syrup'],
+    instructions: ['Rub steaks with olive oil, season with Sugar Sand.', 'Rest at room temperature 20 minutes.', 'Preheat grill to medium-high.', 'Grill 5-6 min per side until 145°F internal.', 'Transfer to platter, tent with foil.', 'Reduce apple cider by half in small saucepan.', 'Whisk in butter and maple syrup until glossy.', 'Drizzle sauce over steaks and serve.'],
+    tips: 'Pork steaks have more fat than chops - don\'t trim, it renders deliciously!'
+  },
+  { 
+    id: 18, title: 'Slow Cooker Carnitas', spice: 'sugar-sand', protein: 'pork', method: 'slow', time: '8 hours', difficulty: 'Easy', servings: '12',
+    description: 'Hands-off, hands-down delicious.',
+    ingredients: ['4 lbs boneless pork shoulder, 3" chunks', '3 tbsp Sugar Sand rub', '1 orange, juiced', '1 lime, juiced', '1/2 cup chicken broth', '2 bay leaves', 'Corn tortillas', 'Fresh cilantro and lime wedges'],
+    instructions: ['Season pork chunks generously with Sugar Sand.', 'Place in slow cooker with juices, broth, bay leaves.', 'Cook on low 8 hours or high 4-5 hours.', 'Remove pork and shred with two forks.', 'Preheat broiler. Spread pork on baking sheet.', 'Ladle 1/2 cup cooking liquid over pork.', 'Broil 3-4 min until crispy. Toss and broil 2-3 more min.', 'Serve in warm tortillas with cilantro and lime.'],
+    tips: 'The final broiling step creates those essential crispy edges!'
+  },
+  // BAYSIDE - CHICKEN (Recipes 19-28)
+  { 
+    id: 19, title: 'Lemon Herb Thighs', spice: 'bayside', protein: 'chicken', method: 'grill', time: '30 min', difficulty: 'Easy', servings: '4',
+    description: 'Crispy skin, Mediterranean soul.',
+    ingredients: ['8 bone-in, skin-on chicken thighs', '3 tbsp Bayside rub', '3 tbsp olive oil', '2 lemons (1 juiced, 1 sliced)', '4 sprigs fresh thyme', '2 tbsp butter, melted', 'Fresh parsley'],
+    instructions: ['Pat thighs completely dry with paper towels.', 'Loosen skin, rub Bayside directly on meat under skin.', 'Season outside, drizzle with olive oil.', 'Rest at room temperature 20 minutes.', 'Preheat grill for two-zone cooking.', 'Grill skin-side down over direct heat 5-6 min until crispy.', 'Flip to indirect heat, close lid, cook to 175°F.', 'Brush with lemon butter, serve with lemon slices and herbs.'],
+    tips: 'Starting skin-side down renders fat and crisps the skin perfectly.'
+  },
+  { 
+    id: 20, title: 'Roast Chicken', spice: 'bayside', protein: 'chicken', method: 'oven', time: '1.5 hours', difficulty: 'Intermediate', servings: '4-6',
+    description: 'Sunday supper perfection.',
+    ingredients: ['1 whole chicken (4-5 lbs)', '3 tbsp Bayside rub', '4 tbsp butter, softened', '1 lemon, quartered', '1 head garlic, halved', '6 sprigs fresh thyme', '2 tbsp olive oil', 'Flaky sea salt'],
+    instructions: ['Remove chicken from fridge 1 hour early.', 'Pat completely dry inside and out.', 'Mix softened butter with 1 tbsp Bayside.', 'Loosen skin, spread herb butter underneath.', 'Season cavity, stuff with lemon, garlic, thyme.', 'Truss legs, tuck wings, rub with oil and remaining rub.', 'Roast at 425°F 20 min, reduce to 375°F.', 'Continue until thigh reaches 175°F (50-60 min). Rest 15 min.'],
+    tips: 'Dry the skin thoroughly for the crispiest results!'
+  },
+  { 
+    id: 21, title: 'Chicken Souvlaki', spice: 'bayside', protein: 'chicken', method: 'grill', time: '25 min', difficulty: 'Easy', servings: '6',
+    description: 'Greek flavors for summer.',
+    ingredients: ['2 lbs boneless chicken thighs, 1.5" pieces', '3 tbsp Bayside rub', '1/4 cup olive oil', '2 tbsp lemon juice', '1 tbsp red wine vinegar', '1 tsp dried oregano', '6 pita breads', 'Tzatziki (FODMAP-friendly)', 'Tomatoes and cucumbers'],
+    instructions: ['Cut thighs into uniform 1.5" pieces.', 'Whisk oil, lemon, vinegar, Bayside, oregano.', 'Toss chicken in marinade. Refrigerate 1-4 hours.', 'Thread onto metal skewers.', 'Preheat grill to high.', 'Grill 4-5 min per side until charred and 165°F.', 'Warm pitas on grill 30 seconds per side.', 'Serve chicken in pita with tzatziki and vegetables.'],
+    tips: 'Thigh meat stays juicier than breast - don\'t skip the marinating!'
+  },
+  { 
+    id: 22, title: 'Sheet Pan Dinner', spice: 'bayside', protein: 'chicken', method: 'oven', time: '45 min', difficulty: 'Easy', servings: '4',
+    description: 'Weeknight dinner, minimal cleanup.',
+    ingredients: ['4 bone-in chicken thighs', '2 tbsp Bayside rub', '1 lb baby potatoes, halved', '2 cups broccoli florets', '1 red bell pepper, sliced', '1 yellow squash, sliced', '4 tbsp olive oil, divided', '1 lemon, sliced', 'Fresh parsley'],
+    instructions: ['Preheat oven to 425°F. Line sheet pan with parchment.', 'Toss potatoes with 2 tbsp oil and pinch of Bayside.', 'Spread potatoes on pan, roast 15 minutes.', 'Pat chicken dry, season with Bayside.', 'Toss vegetables with oil and pinch of rub.', 'Push potatoes aside, add chicken skin-side up in center.', 'Arrange vegetables around chicken, top with lemon.', 'Roast 25-30 min until chicken reaches 175°F.'],
+    tips: 'Start potatoes first since they take longest. Cut veggies to similar sizes.'
+  },
+  { 
+    id: 23, title: 'Spatchcock Chicken', spice: 'bayside', protein: 'chicken', method: 'grill', time: '45 min', difficulty: 'Intermediate', servings: '4',
+    description: 'Faster roasting, crispier skin.',
+    ingredients: ['1 whole chicken (4 lbs)', '3 tbsp Bayside rub', '4 tbsp butter, melted', '2 tbsp olive oil', '1 lemon, juiced', 'Fresh herbs (thyme, rosemary)'],
+    instructions: ['Cut along both sides of backbone with shears. Remove.', 'Flip chicken, press firmly to crack breastbone and flatten.', 'Pat dry, season both sides with Bayside.', 'Rest at room temperature 30 minutes.', 'Set up grill for two-zone cooking.', 'Place skin-up on cooler side, close lid, cook 30 min.', 'Flip skin-down over direct heat 5-8 min to crisp.', 'Brush with lemon butter, cook to 175°F thigh temp. Rest 10 min.'],
+    tips: 'Spatchcocking cuts cooking time nearly in half!'
+  },
+  { 
+    id: 24, title: 'Chicken Drumsticks', spice: 'bayside', protein: 'chicken', method: 'oven', time: '45 min', difficulty: 'Easy', servings: '4-6',
+    description: 'Kid-friendly crowd pleaser.',
+    ingredients: ['12 chicken drumsticks', '3 tbsp Bayside rub', '3 tbsp olive oil', '2 tbsp butter, melted', '1 tbsp honey', '1 tsp lemon zest', 'Fresh parsley'],
+    instructions: ['Preheat oven to 425°F. Line sheet pan with foil, place wire rack on top.', 'Pat drumsticks very dry.', 'Toss with olive oil, then season with Bayside.', 'Arrange on rack with space between each.', 'Bake 25 min, then flip each drumstick.', 'Continue until 175°F internal (15-20 more min).', 'Mix butter with honey and lemon zest.', 'Brush with glaze, return to oven 3-4 min. Garnish with parsley.'],
+    tips: 'The wire rack is key - it crisps the skin all around!'
+  },
+  { 
+    id: 25, title: 'Chicken Shawarma', spice: 'bayside', protein: 'chicken', method: 'oven', time: '30 min', difficulty: 'Easy', servings: '6',
+    description: 'Middle Eastern street food at home.',
+    ingredients: ['2 lbs boneless, skinless chicken thighs', '3 tbsp Bayside rub', '1/4 cup olive oil', '2 tbsp lemon juice', '1/2 cup plain lactose-free yogurt', 'Flatbreads or pita', 'Pickled vegetables', 'Tahini sauce', 'Fresh herbs'],
+    instructions: ['Slice thighs into thin 1/4" strips.', 'Whisk yogurt, oil, lemon, and Bayside.', 'Toss chicken in marinade. Refrigerate 2-24 hours.', 'Preheat oven to 425°F. Line sheet pan with foil.', 'Spread chicken in single layer, leave marinade behind.', 'Roast 15 min, then turn on broiler.', 'Broil 3-5 min until edges charred and crispy.', 'Serve in warm flatbread with tahini, pickles, herbs.'],
+    tips: 'The yogurt tenderizes while the broiler chars - that combo is key!'
+  },
+  { 
+    id: 26, title: 'Smoked Wings', spice: 'bayside', protein: 'chicken', method: 'smoke', time: '2 hours', difficulty: 'Easy', servings: '4-6',
+    description: 'Smoky depth that fried wings can\'t match.',
+    ingredients: ['3 lbs chicken wings, tips removed', '3 tbsp Bayside rub', '1 tbsp baking powder', '4 tbsp butter', '2 tbsp lemon juice', '1 tbsp honey', 'Ranch dressing', 'Celery sticks'],
+    instructions: ['Pat wings completely dry.', 'Toss with Bayside and baking powder (for crispy skin).', 'Refrigerate uncovered 2 hours or overnight.', 'Smoke at 275°F using fruit wood.', 'Smoke 1.5 hours until skin starts to crisp.', 'Increase to 350°F, cook 20-30 more min until crispy.', 'Melt butter with lemon juice and honey.', 'Toss wings in lemon-honey butter. Serve with ranch and celery.'],
+    tips: 'The baking powder draws moisture from skin for maximum crispiness!'
+  },
+  { 
+    id: 27, title: 'Chicken Paillard', spice: 'bayside', protein: 'chicken', method: 'pan', time: '15 min', difficulty: 'Easy', servings: '4',
+    description: 'Thin-pounded for quick cooking.',
+    ingredients: ['4 boneless, skinless chicken breasts', '2 tbsp Bayside rub', '3 tbsp olive oil', '2 tbsp butter', '4 cups arugula', '1/2 cup cherry tomatoes, halved', '2 tbsp balsamic glaze', 'Shaved Parmesan', '1 lemon'],
+    instructions: ['Place breasts between plastic wrap.', 'Pound to even 1/4" thickness with mallet.', 'Season both sides with Bayside.', 'Heat oil in large skillet over medium-high.', 'Cook 2-3 min per side until golden and cooked through.', 'Remove to plates.', 'Add butter, let brown slightly, squeeze in lemon juice.', 'Top chicken with arugula, tomatoes, pan sauce, balsamic, Parmesan.'],
+    tips: 'Even thickness is key - use a thermometer, 165°F means done!'
+  },
+  { 
+    id: 28, title: 'Chicken Cacciatore', spice: 'bayside', protein: 'chicken', method: 'pan', time: '1 hour', difficulty: 'Intermediate', servings: '6',
+    description: 'Rustic Italian comfort.',
+    ingredients: ['8 bone-in chicken thighs', '2 tbsp Bayside rub', '3 tbsp olive oil', '2 bell peppers, sliced', '8 oz cremini mushrooms, sliced', '1 can (28 oz) crushed tomatoes', '1/2 cup dry white wine', '1/2 cup chicken broth', '1/2 cup olives', '2 tbsp capers', 'Fresh basil'],
+    instructions: ['Season thighs with Bayside.', 'Heat oil in Dutch oven over medium-high.', 'Brown chicken 4 min per side. Remove and set aside.', 'Add peppers and mushrooms. Sauté 5 minutes.', 'Add wine, scrape up browned bits.', 'Add tomatoes, broth, olives, capers. Stir.', 'Nestle chicken in sauce, skin-side up. Simmer covered 35-40 min.', 'Uncover, simmer 5 more min to thicken. Garnish with basil.'],
+    tips: 'Don\'t skip browning - the fond on the pan is liquid gold!'
+  },
+  // DOCKSIDE - FISH (Recipes 29-38)
+  { 
+    id: 29, title: 'Pan-Seared Cod', spice: 'dockside', protein: 'fish', method: 'pan', time: '15 min', difficulty: 'Easy', servings: '4',
+    description: 'Delicate, flaky, bright—straight from the dock.',
+    ingredients: ['4 cod fillets (6 oz each, 1" thick)', '2 tbsp Dockside rub', '3 tbsp butter, divided', '2 tbsp olive oil', '1 lemon, halved', '2 tbsp capers', '2 tbsp fresh parsley', 'Flaky sea salt'],
+    instructions: ['Pat cod completely dry with paper towels.', 'Season both sides with Dockside. Rest 10 minutes.', 'Heat oil and 1 tbsp butter in non-stick skillet over medium-high.', 'When butter foams, add cod presentation-side down.', 'Cook without moving 3-4 min until golden.', 'Gently flip, cook 2-3 more min until fish flakes.', 'Remove cod. Add remaining butter and capers.', 'Squeeze lemon into butter, spoon over cod. Garnish with parsley and salt.'],
+    tips: 'Don\'t move the fish - let the crust develop. It releases when ready!'
+  },
+  { 
+    id: 30, title: 'Grilled Shrimp Skewers', spice: 'dockside', protein: 'fish', method: 'grill', time: '15 min', difficulty: 'Easy', servings: '4',
+    description: 'Summer on a stick.',
+    ingredients: ['2 lbs extra-large shrimp (16-20 ct), peeled', '2 tbsp Dockside rub', '3 tbsp olive oil', '2 tbsp butter, melted', '2 tbsp lemon juice', 'Fresh parsley', 'Lemon wedges', 'Metal or soaked wooden skewers'],
+    instructions: ['Toss shrimp with olive oil and Dockside.', 'Marinate 15-30 minutes.', 'Thread onto skewers through head and tail.', 'Preheat grill to high.', 'Grill 2-3 min per side until pink and slightly charred.', 'Mix melted butter with lemon juice.', 'Brush shrimp with lemon butter during last minute.', 'Transfer to platter, drizzle with more butter, garnish with parsley and lemon.'],
+    tips: 'Shrimp are done when pink and form a "C" - an "O" means overcooked!'
+  },
+  { 
+    id: 31, title: 'Baked Haddock', spice: 'dockside', protein: 'fish', method: 'oven', time: '20 min', difficulty: 'Easy', servings: '4',
+    description: 'Cape Cod\'s favorite fish, simply prepared.',
+    ingredients: ['4 haddock fillets (6 oz each)', '2 tbsp Dockside rub', '4 tbsp butter', '1/2 cup panko breadcrumbs', '2 tbsp fresh parsley, chopped', '1 lemon, zested and juiced', 'Fresh dill'],
+    instructions: ['Preheat oven to 400°F. Butter a baking dish.', 'Pat haddock dry, place in dish.', 'Season with Dockside.', 'Melt butter, mix with panko, parsley, lemon zest.', 'Top each fillet with butter-crumb mixture, press gently.', 'Bake 12-15 min until fish flakes and topping is golden.', 'Squeeze fresh lemon juice over top.', 'Garnish with dill and serve immediately.'],
+    tips: 'Haddock is slightly sweeter than cod with a finer flake.'
+  },
+  { 
+    id: 32, title: 'Seared Scallops', spice: 'dockside', protein: 'fish', method: 'pan', time: '10 min', difficulty: 'Intermediate', servings: '4',
+    description: 'Restaurant-quality sear at home.',
+    ingredients: ['1.5 lbs dry-packed sea scallops (U-10 size)', '1 tbsp Dockside rub', '2 tbsp olive oil', '3 tbsp butter', '1 tbsp lemon juice', '1 tbsp capers', '2 tbsp fresh chives', 'Flaky sea salt'],
+    instructions: ['Remove side muscle from each scallop if attached.', 'Pat scallops EXTREMELY dry - this is crucial.', 'Season one side lightly with Dockside.', 'Heat oil in stainless/cast iron over high until smoking.', 'Place scallops seasoned-side down with space between.', 'Do not move for 2 min until deep golden crust forms.', 'Season top, flip, cook 1-2 more minutes.', 'Remove. Add butter, lemon, capers to pan. Drizzle over scallops.'],
+    tips: 'Dry-packed scallops are essential - wet-packed will steam, not sear!'
+  },
+  { 
+    id: 33, title: 'Grilled Branzino', spice: 'dockside', protein: 'fish', method: 'grill', time: '25 min', difficulty: 'Intermediate', servings: '2',
+    description: 'Impressive whole fish, surprisingly simple.',
+    ingredients: ['2 whole branzino (~1 lb each), cleaned and scaled', '2 tbsp Dockside rub', '4 tbsp olive oil, divided', '1 lemon, sliced', '1 orange, sliced', '4 sprigs fresh thyme', '4 sprigs fresh dill', 'Flaky sea salt'],
+    instructions: ['Score fish on both sides with 3 diagonal cuts, 1/2" deep.', 'Season inside and out with Dockside.', 'Rub with 2 tbsp olive oil.', 'Stuff cavity with lemon, orange, thyme, dill.', 'Rest at room temperature 15 minutes.', 'Preheat grill to medium-high. Oil grates well.', 'Grill 6-7 min per side until charred and fish flakes.', 'Drizzle with remaining oil, finish with flaky salt.'],
+    tips: 'A fish basket makes grilling whole fish much easier!'
+  },
+  { 
+    id: 34, title: 'Shrimp Scampi', spice: 'dockside', protein: 'fish', method: 'pan', time: '15 min', difficulty: 'Easy', servings: '4',
+    description: 'Classic scampi with herbal depth.',
+    ingredients: ['1.5 lbs large shrimp, peeled', '1 tbsp Dockside rub', '6 tbsp butter, divided', '3 tbsp garlic-infused oil', '1/2 cup dry white wine', '1/4 cup lemon juice', '1/4 tsp red pepper flakes', '12 oz linguine', '1/4 cup fresh parsley', 'Lemon zest'],
+    instructions: ['Cook linguine per package. Reserve 1 cup pasta water.', 'Season shrimp with Dockside.', 'Heat garlic oil and 2 tbsp butter over medium-high.', 'Cook shrimp 2 min per side until pink. Remove.', 'Add wine, scrape up bits. Add lemon and pepper flakes. Reduce by half.', 'Whisk in remaining butter one tablespoon at a time.', 'Return shrimp, add linguine, toss. Add pasta water as needed.', 'Garnish with parsley and lemon zest.'],
+    tips: 'Whisk cold butter in slowly - it emulsifies for a creamy texture!'
+  },
+  { 
+    id: 35, title: 'Fish Tacos', spice: 'dockside', protein: 'fish', method: 'pan', time: '20 min', difficulty: 'Easy', servings: '4',
+    description: 'Coastal casual at its best.',
+    ingredients: ['1.5 lbs cod or mahi-mahi', '2 tbsp Dockside rub', '2 tbsp olive oil', '8 corn tortillas', '2 cups shredded cabbage', '1/4 cup mayonnaise', '2 tbsp lime juice', '1/4 cup fresh cilantro', '1 avocado, sliced', 'Hot sauce'],
+    instructions: ['Cut fish into 1" wide strips.', 'Season with Dockside.', 'Heat oil in skillet over medium-high.', 'Cook fish 2-3 min per side until flaky.', 'Mix mayo with lime juice for crema.', 'Warm tortillas in dry skillet or over flame.', 'Toss cabbage with squeeze of lime.', 'Assemble: tortilla, cabbage, fish, crema, avocado, cilantro.'],
+    tips: 'Double-stack tortillas to prevent breakage!'
+  },
+  { 
+    id: 36, title: 'Broiled Lobster Tails', spice: 'dockside', protein: 'fish', method: 'oven', time: '15 min', difficulty: 'Easy', servings: '4',
+    description: 'A Cape Cod celebration.',
+    ingredients: ['4 lobster tails (6-8 oz each)', '1 tbsp Dockside rub', '6 tbsp butter, melted', '1 tbsp lemon juice', '1 tbsp fresh parsley', '1/2 tsp paprika', 'Lemon wedges'],
+    instructions: ['Preheat broiler to high. Position rack 6" from heat.', 'Cut through top shell lengthwise with kitchen shears.', 'Gently pull meat up through cut, keeping attached at tail.', 'Lay meat on top of shell.', 'Mix 3 tbsp butter with Dockside, brush over meat.', 'Place on baking sheet.', 'Broil 8-10 min until opaque and slightly golden.', 'Mix remaining butter with lemon and parsley. Drizzle over tails.'],
+    tips: 'Lobster is done at 140°F - don\'t overcook or it gets rubbery!'
+  },
+  { 
+    id: 37, title: 'Clam Bake Packets', spice: 'dockside', protein: 'fish', method: 'grill', time: '20 min', difficulty: 'Easy', servings: '4',
+    description: 'Beach tradition, backyard execution.',
+    ingredients: ['2 lbs littleneck clams, scrubbed', '1 lb large shrimp, shell-on', '1 lb small red potatoes, halved', '4 ears corn, cut into thirds', '1 lb smoked sausage, sliced (FODMAP-friendly)', '8 tbsp butter', '1 tbsp Dockside rub', '1 cup dry white wine', 'Parsley', 'Lemon wedges'],
+    instructions: ['Parboil potatoes 10 min until starting to soften. Drain.', 'Prepare 4 large pieces heavy-duty foil (18" each).', 'Divide potatoes, corn, sausage, clams, shrimp among packets.', 'Season each with Dockside.', 'Top each with 2 tbsp butter and 1/4 cup wine.', 'Fold foil tightly, leaving room for steam.', 'Grill over medium-high 15-20 min until clams open.', 'Carefully open (steam!). Discard unopened clams. Serve with bread.'],
+    tips: 'Make sure packets are sealed well to trap steam!'
+  },
+  { 
+    id: 38, title: 'Crab Cakes', spice: 'dockside', protein: 'fish', method: 'pan', time: '25 min', difficulty: 'Intermediate', servings: '4',
+    description: 'All crab, minimal filler.',
+    ingredients: ['1 lb jumbo lump crab meat', '1 tbsp Dockside rub', '1/4 cup mayonnaise', '1 egg, beaten', '1 tbsp Dijon mustard', '1 tbsp Worcestershire', '1/4 cup panko (plus more for coating)', '2 tbsp fresh chives', '3 tbsp butter', 'Lemon wedges', 'Remoulade sauce'],
+    instructions: ['Pick through crab for shell fragments. Keep lumps intact.', 'Mix mayo, egg, mustard, Worcestershire, Dockside, chives.', 'Gently fold in crab and 1/4 cup panko - don\'t break lumps.', 'Form into 8 patties, 2" wide and 1" thick.', 'Lightly coat outsides with panko.', 'Refrigerate 30 min to help hold together.', 'Heat butter in skillet over medium.', 'Cook 3-4 min per side until golden. Serve with lemon and remoulade.'],
+    tips: 'Use the best lump crab - it\'s the star. Chilling before cooking is essential!'
+  },
+  // THE 95 - HEAT (Recipes 39-43)
+  { 
+    id: 39, title: "Winner's Circle Wings", spice: 'the-95', protein: 'chicken', method: 'grill', time: '45 min', difficulty: 'Easy', servings: '4',
+    description: 'Game day heat for champions.',
+    ingredients: ['3 lbs chicken wings, tips removed', '3 tbsp The \'95 rub', '1 tbsp baking powder', '4 tbsp butter, melted', '2 tbsp hot sauce', '1 tbsp honey', 'Ranch dressing', 'Celery sticks'],
+    instructions: ['Pat wings completely dry.', 'Toss with The \'95 and baking powder.', 'Refrigerate uncovered 2 hours or overnight.', 'Set up grill for two-zone cooking.', 'Grill over indirect heat 30 min, lid closed.', 'Move to direct heat 5-7 min per side until crispy.', 'Mix butter with hot sauce and honey.', 'Toss wings in hot honey butter. Serve with ranch and celery.'],
+    tips: 'Start indirect to render fat, finish direct for crispy skin!'
+  },
+  { 
+    id: 40, title: 'Spicy Smoked Ribs', spice: 'the-95', protein: 'pork', method: 'smoke', time: '6 hours', difficulty: 'Intermediate', servings: '4-6',
+    description: 'Ghost pepper meets smoke. Heat seekers only.',
+    ingredients: ['2 racks St. Louis spare ribs', '1/4 cup The \'95 rub', '4 tbsp butter', '1/4 cup honey', '2 tbsp apple cider vinegar', '1/2 cup spicy BBQ sauce', 'Pickles', 'White bread'],
+    instructions: ['Remove membrane from bone side.', 'Apply The \'95 generously both sides. Refrigerate overnight.', 'Smoke at 250°F for 3 hours.', 'Wrap in foil with butter, honey, vinegar.', 'Return to smoker for 2 hours.', 'Unwrap, brush with spicy BBQ sauce.', 'Smoke 1 more hour until sauce is tacky.', 'Rest 10 min, slice. Serve with pickles and bread to cut heat.'],
+    tips: 'Have dairy nearby - milk or ranch helps if heat becomes too much!'
+  },
+  { 
+    id: 41, title: 'Nashville Hot Chicken', spice: 'the-95', protein: 'chicken', method: 'pan', time: '45 min', difficulty: 'Intermediate', servings: '4',
+    description: 'Tennessee fire, Cape Cod style.',
+    ingredients: ['8 chicken thighs or drumsticks', '2 cups buttermilk (lactose-free)', '2 cups flour', '3 tbsp The \'95 rub, divided', '1/2 cup lard or vegetable oil (for paste)', '2 tbsp cayenne pepper', '1 tbsp brown sugar', 'White bread slices', 'Dill pickle chips', 'Oil for frying'],
+    instructions: ['Soak chicken in buttermilk with 1 tbsp The \'95 for 4+ hours.', 'Mix flour with 1 tbsp The \'95.', 'Dredge chicken, letting excess drip off.', 'Heat oil to 350°F in Dutch oven.', 'Fry 15-18 min until golden and 175°F internal.', 'Make hot paste: heat lard, stir in remaining The \'95, cayenne, brown sugar.', 'Brush hot paste liberally over fried chicken.', 'Serve on white bread with pickle chips.'],
+    tips: 'The hot paste should be warm but not smoking - brush it on immediately!'
+  },
+  { 
+    id: 42, title: 'Fire-Roasted Salsa', spice: 'the-95', protein: 'vegetables', method: 'grill', time: '30 min', difficulty: 'Easy', servings: '8',
+    description: 'Smoky heat for chips.',
+    ingredients: ['6 Roma tomatoes', '4 jalapeño peppers', '1 serrano pepper', '1 poblano pepper', '1/2 bunch cilantro', '3 tbsp lime juice', '1 tbsp The \'95 rub', '1/2 tsp salt', 'Tortilla chips'],
+    instructions: ['Preheat grill to high.', 'Place whole tomatoes and peppers directly on grill.', 'Char all sides, turning occasionally (10-15 min).', 'Remove and let cool slightly.', 'Remove stems. For less heat, remove seeds.', 'Add charred vegetables to food processor.', 'Add cilantro, lime juice, The \'95, salt.', 'Pulse to desired consistency. Rest 30 min. Serve with chips.'],
+    tips: 'The char is essential - it balances the heat with smokiness!'
+  },
+  { 
+    id: 43, title: 'Spicy Beef Jerky', spice: 'the-95', protein: 'beef', method: 'smoke', time: '6 hours', difficulty: 'Intermediate', servings: '8',
+    description: 'Trail fuel with serious kick.',
+    ingredients: ['2 lbs flank steak or eye of round', '3 tbsp The \'95 rub', '1/4 cup soy sauce (gluten-free)', '2 tbsp Worcestershire', '1 tbsp brown sugar', '1 tsp liquid smoke', '1/2 tsp black pepper'],
+    instructions: ['Freeze meat 1-2 hours until firm but not frozen.', 'Slice against grain into 1/4" strips.', 'Mix soy sauce, Worcestershire, sugar, liquid smoke, pepper, The \'95.', 'Marinate strips 12-24 hours.', 'Pat dry with paper towels.', 'Preheat smoker to 175°F or lowest setting.', 'Arrange strips on racks without overlapping.', 'Smoke 4-6 hours until dried but pliable - should crack but not break.'],
+    tips: 'Slice with grain for chewier, against grain for tender. Thinner = faster drying.'
+  },
+  // FAR SHORE - ASIAN (Recipes 44-48)
+  { 
+    id: 44, title: 'Sesame Ginger Salmon', spice: 'far-shore', protein: 'fish', method: 'oven', time: '20 min', difficulty: 'Easy', servings: '4',
+    description: 'East meets Cape.',
+    ingredients: ['4 salmon fillets (6 oz each)', '2 tbsp Far Shore rub', '3 tbsp soy sauce (gluten-free)', '2 tbsp maple syrup', '1 tbsp rice vinegar', '1 tbsp sesame oil', '2 tbsp sesame seeds', '2 green onions, sliced (green parts only)', 'Steamed rice'],
+    instructions: ['Preheat oven to 400°F. Line baking sheet with parchment.', 'Pat salmon dry, season with Far Shore.', 'Place skin-side down on sheet.', 'Mix soy sauce, maple syrup, vinegar, sesame oil.', 'Brush half the glaze over salmon.', 'Roast 10 minutes.', 'Brush remaining glaze, sprinkle with sesame seeds.', 'Roast 5-7 more min until salmon flakes. Garnish with green onions.'],
+    tips: 'Don\'t skip the second glaze - it builds layers of flavor!'
+  },
+  { 
+    id: 45, title: 'Asian Stir-Fry', spice: 'far-shore', protein: 'chicken', method: 'pan', time: '20 min', difficulty: 'Easy', servings: '4',
+    description: 'Weeknight speed, weekend flavor.',
+    ingredients: ['1.5 lbs boneless chicken thighs, sliced thin', '2 tbsp Far Shore rub', '3 tbsp vegetable oil, divided', '2 cups broccoli florets', '1 red bell pepper, sliced', '8 oz snap peas', '3 tbsp soy sauce (gluten-free)', '1 tbsp rice vinegar', '1 tbsp cornstarch + 2 tbsp water', 'Steamed rice', 'Sesame seeds'],
+    instructions: ['Slice chicken thin, toss with Far Shore.', 'Heat 2 tbsp oil in wok over high heat.', 'Stir-fry chicken 4-5 min until cooked. Remove.', 'Add remaining oil.', 'Stir-fry broccoli 2 min, add pepper and snap peas.', 'Cook 2-3 more min until tender-crisp.', 'Add soy sauce and vinegar. Return chicken.', 'Add cornstarch slurry, toss until sauce thickens. Serve over rice.'],
+    tips: 'High heat and don\'t overcrowd - work in batches if needed!'
+  },
+  { 
+    id: 46, title: 'Grilled Tuna Steaks', spice: 'far-shore', protein: 'fish', method: 'grill', time: '10 min', difficulty: 'Easy', servings: '4',
+    description: 'Sushi-grade sear.',
+    ingredients: ['4 sushi-grade tuna steaks (6 oz each, 1" thick)', '2 tbsp Far Shore rub', '2 tbsp vegetable oil', '2 tbsp soy sauce (gluten-free)', '1 tbsp wasabi paste', '2 tbsp pickled ginger', '1 tbsp sesame seeds', 'Soy sauce for dipping'],
+    instructions: ['Let tuna come to room temperature 15 minutes.', 'Pat completely dry.', 'Press Far Shore firmly onto all sides.', 'Brush with oil.', 'Preheat grill to highest setting - screaming hot.', 'Grill 60-90 seconds per side for rare.', 'Remove immediately - carryover continues cooking.', 'Rest 2 min, slice against grain. Serve with wasabi, ginger, soy, sesame.'],
+    tips: 'For sushi-grade tuna, rare is best - the contrast of seared and raw is special!'
+  },
+  { 
+    id: 47, title: 'Five Spice Pork Belly', spice: 'far-shore', protein: 'pork', method: 'oven', time: '3 hours', difficulty: 'Intermediate', servings: '6',
+    description: 'Crispy skin, melt-in-your-mouth meat.',
+    ingredients: ['2 lbs pork belly, skin on', '2 tbsp Far Shore rub', '1 tbsp kosher salt (for skin)', '2 tbsp soy sauce (gluten-free)', '1 tbsp rice vinegar', '1 tbsp honey', 'Steamed bao buns', 'Hoisin sauce', 'Cucumbers', 'Cilantro'],
+    instructions: ['Score skin in crosshatch, don\'t cut into meat.', 'Rub meat side with Far Shore.', 'Rub skin generously with kosher salt.', 'Refrigerate uncovered overnight to dry skin.', 'Remove 1 hour before cooking.', 'Roast at 325°F for 2 hours until tender.', 'Increase to 450°F for 20-30 min until skin is crispy and bubbly.', 'Rest 10 min, slice thick. Serve in bao with hoisin, cucumber, cilantro.'],
+    tips: 'The overnight dry brine is essential for crispy skin!'
+  },
+  { 
+    id: 48, title: 'Orange Ginger Shrimp', spice: 'far-shore', protein: 'fish', method: 'pan', time: '15 min', difficulty: 'Easy', servings: '4',
+    description: 'Bright citrus, warming ginger.',
+    ingredients: ['1.5 lbs large shrimp, peeled', '2 tbsp Far Shore rub', '2 tbsp vegetable oil', '1/2 cup orange juice', '2 tbsp soy sauce (gluten-free)', '1 tbsp honey', '1 tbsp cornstarch + 2 tbsp water', 'Orange zest', '2 green onions, sliced (green parts only)', 'Steamed rice'],
+    instructions: ['Toss shrimp with Far Shore.', 'Heat oil in wok over high heat.', 'Stir-fry shrimp 2-3 min until pink. Remove.', 'Add orange juice, soy sauce, honey to pan.', 'Bring to simmer.', 'Add cornstarch slurry, stir until sauce thickens.', 'Return shrimp, toss to coat.', 'Garnish with orange zest and green onions. Serve over rice.'],
+    tips: 'Have all ingredients prepped before cooking - stir-fry moves fast!'
+  }
+];
+
+// Meal plans
+const mealPlans = {
+  weeknight: { name: 'Weeknight Winners', description: 'Quick meals for busy Cape Cod evenings.', days: [
+    { day: 'Monday', recipe: 'Lemon Herb Thighs', spice: 'bayside', side: 'Roasted potatoes, salad' },
+    { day: 'Tuesday', recipe: 'Pan-Seared Cod', spice: 'dockside', side: 'Rice, steamed broccoli' },
+    { day: 'Wednesday', recipe: 'Smash Burgers', spice: 'black-kettle', side: 'Sweet potato fries' },
+    { day: 'Thursday', recipe: 'Asian Stir-Fry', spice: 'far-shore', side: 'Jasmine rice' },
+    { day: 'Friday', recipe: 'Maple Sage Tenderloin', spice: 'sugar-sand', side: 'Mashed potatoes' }
+  ]},
+  grillmaster: { name: 'Grillmaster Weekend', description: 'Fire up the grill like the Fourth of July.', days: [
+    { day: 'Saturday Lunch', recipe: "Winner's Circle Wings", spice: 'the-95', side: 'Celery, blue cheese' },
+    { day: 'Saturday Dinner', recipe: 'Championship Smoked Brisket', spice: 'black-kettle', side: 'Pickles, beans' },
+    { day: 'Sunday Lunch', recipe: 'Grilled Shrimp Skewers', spice: 'dockside', side: 'Crusty bread' },
+    { day: 'Sunday Dinner', recipe: 'Cape Cod Pulled Pork', spice: 'sugar-sand', side: 'Coleslaw, cornbread' }
+  ]},
+  seafood: { name: 'Seafood Week', description: 'Fresh from Cape Cod Bay.', days: [
+    { day: 'Monday', recipe: 'Pan-Seared Cod', spice: 'dockside', side: 'Lemon rice' },
+    { day: 'Tuesday', recipe: 'Sesame Ginger Salmon', spice: 'far-shore', side: 'Bok choy' },
+    { day: 'Wednesday', recipe: 'Grilled Shrimp Skewers', spice: 'dockside', side: 'Quinoa salad' },
+    { day: 'Thursday', recipe: 'Grilled Tuna Steaks', spice: 'far-shore', side: 'Seaweed salad' },
+    { day: 'Friday', recipe: 'Baked Haddock', spice: 'dockside', side: 'Roasted potatoes' }
+  ]},
+  summer: { name: 'Cape Cod Summer', description: 'Seasonal favorites for long summer days.', days: [
+    { day: 'Monday', recipe: 'Chicken Souvlaki', spice: 'bayside', side: 'Pita, tzatziki' },
+    { day: 'Tuesday', recipe: 'Fish Tacos', spice: 'dockside', side: 'Black beans' },
+    { day: 'Wednesday', recipe: 'Beef Kebabs', spice: 'black-kettle', side: 'Grilled vegetables' },
+    { day: 'Thursday', recipe: 'Clam Bake Packets', spice: 'dockside', side: 'Corn, butter' },
+    { day: 'Friday', recipe: 'Competition Ribs', spice: 'sugar-sand', side: 'Baked beans' }
+  ]}
+};
+
+// Cape Cod content - comprehensive historical information
+const capeContent = {
+  sandwich: { 
+    title: 'Sandwich, Massachusetts', 
+    subtitle: 'The Oldest Town on Cape Cod • Founded 1637',
+    sections: [
+      {
+        heading: 'The Founding',
+        content: `In 1637, a persuasive and energetic man named Edmund Freeman led a group of settlers from Saugus to establish the first town on Cape Cod. They named it Sandwich after the seaport in Kent, England—drawn by broad salt marshes that resembled their homeland and could immediately provide hay for livestock without cultivation.
+
+The location was part of Plymouth Colony, whose Pilgrim founders were notably more liberal in their religious beliefs than the Puritans of Boston's Massachusetts Bay Colony. Freeman's brother-in-law, John Beauchamp, was one of London's "Adventurer" investors in Plymouth Colony—early venture capitalists who funded the infant colony and sought to profit from its success.
+
+Sandwich was incorporated in 1639, making it one of the oldest towns in the United States—settled by European immigrants nearly 150 years before the American Revolution. The town motto, "Post tot Naufracia Portus" (Latin for "after so many shipwrecks, a haven"), speaks to the treacherous waters that would define Cape Cod's maritime history.`
+      },
+      {
+        heading: 'The Glass Era',
+        content: `In 1825, a Boston businessman named Deming Jarves transformed Sandwich forever. Jarves, who has been called "the father of the American glass industry," chose Sandwich not for its beach sand (too impure for glassmaking) but for its extensive woodlands to fuel the furnaces, shallow harbor for shipping, and proximity to Boston by water.
+
+Construction began on April 19, 1825. Just 76 days later, on the Fourth of July, Sandwich glassmakers produced their first blown and molded glass object. The Boston & Sandwich Glass Company would grow to employ 500 workers and four furnaces of ten pots each, turning out 50-60 tons of cut and pressed glass per week.
+
+Jarves perfected the pressing process, receiving patents for improvements in mold designs and techniques. The company became famous for its "lacy" glass—intricate patterns of dots, circles, diamonds, leaves, and garlands covering entire surfaces. They mass-produced a stunning spectrum of colored tableware: lamps, candlesticks, perfume bottles, and the famous dolphin candlesticks that are now museum pieces.
+
+The factory's closure in 1888 following a national glass workers' strike caused a severe economic depression, forcing people to leave Sandwich or turn to other professions. But the legacy endures—the Sandwich Glass Museum still operates today, and the town has been designated the "Glass Town Cultural District" by the Massachusetts Cultural Council.`
+      },
+      {
+        heading: 'Sandwich Today',
+        content: `Contemporary Sandwich is punctuated by rows of weathered clapboard homes, Greek Revival houses, and a town common encircled by ancient shade trees. Historic Route 6A winds through town, featuring great shops, restaurants, antiquing, and galleries.
+
+The iconic Sandwich Boardwalk, originally built in 1875 and extending 1,350 feet, crosses Mill Creek, low dunes, and salt marsh home to aquatic wildlife and shorebirds. After Hurricane Bob destroyed it in 1991, a fundraising effort rebuilt it—now almost every plank bears a personalized engraved message from donors.
+
+The 1654 Dexter Grist Mill still grinds corn at the edge of tranquil Shawme Pond. The Hoxie House, one of the oldest surviving homes on Cape Cod, dates to the late 1600s. Heritage Museums and Gardens houses antique automobiles and an authentic 1908 carousel.
+
+This is where we handcraft Dentist's Son spice rubs—in a town that has valued craftsmanship for nearly four centuries.`
+      }
+    ]
+  },
+  capeCod: { 
+    title: 'Cape Cod', 
+    subtitle: 'Where Land Meets Sea • 65 Miles of History',
+    sections: [
+      {
+        heading: 'Ancient Shores',
+        content: `Cape Cod bends into the Atlantic like a flexed arm, formed during the last ice age by glaciers pushing sand and rocks into the ocean. The Wampanoag people inhabited these shores for thousands of years before European contact, developing sophisticated fishing and farming techniques. They built wetuash—dome-shaped homes of wooden frames covered with woven mats—and cultivated corn, beans, and squash while harvesting the abundant shellfish and fish from these waters.
+
+In 1602, English explorer Bartholomew Gosnold named this place "Cape Cod" for the abundance of codfish in its waters. The Pilgrims first landed in America on the tip of lower Cape Cod in November 1620—not at Plymouth Rock, but at Provincetown. Finding the land too sandy to support crops, they sailed across Cape Cod Bay to establish Plymouth. Over the next 20 years, settlers spread back to the Cape, following an old Indian trail that is now the scenic Route 6A.
+
+The first homes built by English settlers were wigwams copied from the Wampanoag. Eventually, settlers stripped the land of its forests to make farmland, graze sheep, and build the steep-roof saltbox and Cape Cod cottage—still the most popular house style on the Cape and copied all over the country.`
+      },
+      {
+        heading: 'Maritime Heritage',
+        content: `By the 18th century, Cape Cod had become a bustling hub for fishing and whaling. The Wampanoag had taught settlers how to strip blubber from stranded whales, creating a thriving industry. Whale products—oil for lamps, bone for corsets and buggy whips—were staples of colonial life. Provincetown ranked fifth in the nation for whaling vessels, and the story of the Essex, a Nantucket whaleship attacked and sunk by a sperm whale in 1820, inspired Herman Melville's Moby-Dick.
+
+Cape Cod's treacherous outer banks earned the nickname "Graveyard of the Atlantic." In the 1880s, shipwrecks occurred once every two weeks. More than 1,000 ships met their fate in these waters before the Cape Cod Canal was built. The Whydah, a pirate ship captained by "Black Sam" Bellamy, sank in a 1717 nor'easter—its treasure, discovered centuries later, is displayed at the Whydah Pirate Museum.
+
+The idea of a canal through the Cape dates to Plymouth Colony in the 1600s. George Washington himself ordered a survey in 1776, recognizing its strategic military importance. After numerous failed attempts, financier August Belmont Jr. finally completed the canal in 1914, shortening the journey around the Cape by up to 135 miles. The federal government purchased it in 1928, and the Army Corps of Engineers widened it to 480 feet—making it the widest sea-level canal in the world at the time.`
+      },
+      {
+        heading: 'The Cape Today',
+        content: `The Cape remained isolated well into the 1920s. Though Provincetown attracted artists and writers from New York, the rest of the Cape was rural and quiet. The building of the Mid-Cape Highway in the 1950s marked the great boom in growth, and President John F. Kennedy, who summered in Hyannis Port, added to the area's allure. In 1961, Kennedy signed legislation establishing the Cape Cod National Seashore.
+
+Today, the fishing industry—including lobstering, scalloping, and oyster aquaculture—still brings in over $2 million monthly. Cranberry farming thrives in the region's unique bogs. Tourism, construction, and light industry drive the modern economy, but the character remains: salt marshes, weathered shingle cottages, lighthouses standing sentinel, and the enduring rhythms of the tide.
+
+Our spice rubs are crafted for this table. Dockside honors the cod and haddock that gave the Cape its name. Bayside captures the golden light of summer afternoons on the bay. Sugar Sand recalls the soft white beaches of Town Neck. Every blend carries the spirit of salt air, wooden boats, and family gatherings on weathered decks overlooking the water.`
+      }
+    ]
+  },
+  kettleers: { 
+    title: 'The Kettleers & The Cape League', 
+    subtitle: '1995 Cape League Champions • A Family Legacy',
+    sections: [
+      {
+        heading: 'America\'s Premier Summer League',
+        content: `The Cape Cod Baseball League is the nation's premier summer collegiate baseball league—and has been since before your great-grandparents were born. As early as the 1860s, baseball teams representing Cape Cod towns competed against one another. The earliest newspaper account describes an 1867 game right here in Sandwich between the hometown "Nichols Club" and the visiting Cummaquid team.
+
+What makes the Cape League special? One in every six Major League Baseball players has worn a Cape League uniform. Over 1,600 alumni have appeared in MLB games. More than 400 Cape Leaguers were on major league rosters in 2024 alone. The list of Hall of Famers includes Tom Seaver, Carlton Fisk, Thurman Munson, Craig Biggio, Jeff Bagwell, Frank Thomas, and Todd Helton—all Cape League alumni.
+
+In 1985, the league became the first collegiate summer league to return to wooden bats, mirroring professional play and dramatically increasing its prestige among MLB scouts. Today, dozens of scouts attend every game, and first-round draft picks emerge from the Cape every year—17 Cape League alumni were selected in the first round of the 2025 MLB Draft alone.
+
+The league's ten teams are community institutions. Players live with host families, games are free to attend, and volunteers run everything from concessions to scorekeeping. It's baseball the way it used to be—wooden bats, small-town ballparks, and stars of tomorrow playing for the love of the game.`
+      },
+      {
+        heading: 'The Cotuit Kettleers',
+        content: `The Cotuit Kettleers are the most successful franchise in Cape League history, with 17 championships—more than any other team. Founded in 1947, the team plays at Lowell Park in Cotuit, a quiet village in the southwest corner of Barnstable.
+
+The name "Kettleers" was coined by Cape Cod Standard-Times sports editor Ed Semprini, recalling a legendary land transaction between early settlers and Native Americans involving the exchange of a brass kettle. The team has been owned and operated by the non-profit Cotuit Athletic Association since its founding.
+
+Over 100 Kettleers have gone on to play in Major League Baseball, including Will Clark, Ron Darling, Tim Salmon, Terry Steinbach, Greg Vaughn, and many more. Steinbach still holds the league record for hits in a season. The team's Hall of Fame inductees include Arnold Mycock, who served as general manager from 1950 to 1995—a 45-year tenure that defined the organization.
+
+My father served as General Manager and my mother as Treasurer, dedicating years to the organization that became family to us. They joined the community of host families, volunteers, board members, and fans who keep this tradition alive summer after summer.`
+      },
+      {
+        heading: 'The Summer of \'95',
+        content: `First-year manager Mike Coutts led the 1995 Kettleers to one of the most dominant seasons in Cape League history. The team finished 29-11-3, winning the Western Division with an 11-game winning streak. They never lost two games in a row all season.
+
+The unquestioned star was catcher/outfielder Josh Paul from Vanderbilt, who won the league batting crown with a .364 average and slugged .652. He was named both league MVP and Outstanding Pro Prospect—honors that proved prophetic when he went on to play several years in the majors. Josh was inducted into the Cape League Hall of Fame in 2006.
+
+Pitcher Jack Cressend went 7-1 with a 2.44 ERA that summer, then returned in 1996 to go 7-0 with a 1.89 ERA. He pitched five seasons in the majors with the Twins and Indians, and was inducted into the Cape League Hall of Fame in 2010. After his playing career, Cressend served as pitching coach at Tulane and now works as National Pitching Crosschecker for the Los Angeles Dodgers.
+
+In the championship series against Chatham, the Kettleers won Game 1 handily, 16-6. After dropping Game 2, they came back for the decisive Game 3 at Lowell Park. Josh Gandy started, and the game was tight until the Kettleers erupted for seven runs in the fifth inning, punctuated by Glenn Davis's three-run home run. When Kevin Sheredy recorded the final out, the dogpile began.
+
+"It was the first championship I ever won, and I never won one again as a player," Josh Paul said at the team's 2024 reunion. "That picture of me jumping on top of the pile—that's what baseball is all about."
+
+That championship spirit lives on in The '95, our hottest blend—ghost pepper fire tempered with smoky depth, for those who play to win.`
+      }
+    ]
+  }
+};
+
+// Colors
+const colors = { navy: '#1a2744', navyDark: '#0f1829', navyLight: '#243454', gold: '#c9a227', cream: '#f5f1e8' };
+
+function DentistsSonApp() {
+  const [currentPage, setCurrentPage] = useState('home');
+  const [cart, setCart] = useState([]);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [recipeFilters, setRecipeFilters] = useState({ spice: 'all', protein: 'all', method: 'all' });
+  const [pairingProtein, setPairingProtein] = useState('');
+  const [selectedMealPlan, setSelectedMealPlan] = useState(null);
+  const [subscriptionStep, setSubscriptionStep] = useState(1);
+  const [subFrequency, setSubFrequency] = useState('monthly');
+  const [subSpices, setSubSpices] = useState([]);
+  const [capeSection, setCapeSection] = useState('sandwich');
+
+  const addToCart = (spice) => {
+    const existing = cart.find(item => item.id === spice.id);
+    if (existing) setCart(cart.map(item => item.id === spice.id ? { ...item, quantity: item.quantity + 1 } : item));
+    else setCart([...cart, { ...spice, quantity: 1 }]);
+  };
+
+  const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  const filteredRecipes = recipes.filter(r => 
+    (recipeFilters.spice === 'all' || r.spice === recipeFilters.spice) &&
+    (recipeFilters.protein === 'all' || r.protein === recipeFilters.protein) &&
+    (recipeFilters.method === 'all' || r.method === recipeFilters.method)
+  );
+
+  const pairingMap = { beef: ['black-kettle', 'the-95'], pork: ['sugar-sand', 'the-95', 'far-shore'], chicken: ['bayside', 'the-95', 'far-shore'], fish: ['dockside', 'far-shore'], vegetables: ['bayside', 'far-shore', 'dockside'] };
+
+  const Lighthouse = ({ size = 60 }) => (
+    <svg width={size} height={size} viewBox="0 0 100 100" style={{ display: 'block', margin: '0 auto 1.5rem' }}>
+      <circle cx="50" cy="50" r="46" fill="none" stroke={colors.gold} strokeWidth="2" opacity="0.4"/>
+      <polygon points="50,22 57,35 43,35" fill={colors.gold} opacity="0.9"/>
+      <rect x="46" y="35" width="8" height="32" fill={colors.cream}/>
+      <rect x="46" y="40" width="8" height="4" fill={colors.gold}/>
+      <rect x="46" y="50" width="8" height="4" fill={colors.gold}/>
+      <rect x="46" y="60" width="8" height="4" fill={colors.gold}/>
+      <path d="M38,72 Q50,64 62,72" fill="none" stroke={colors.gold} strokeWidth="2" opacity="0.5"/>
+    </svg>
+  );
+
+  const s = {
+    app: { fontFamily: "'Georgia', serif", background: colors.navy, minHeight: '100vh', color: colors.cream },
+    nav: { background: colors.navyDark, borderBottom: `1px solid ${colors.navyLight}`, padding: '1rem 2rem', position: 'sticky', top: 0, zIndex: 100, display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+    logo: { fontFamily: "'Georgia', serif", fontSize: '1.4rem', color: colors.gold, cursor: 'pointer' },
+    navLink: { color: colors.cream, background: 'none', border: 'none', fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', cursor: 'pointer', opacity: 0.8 },
+    section: { padding: '4rem 2rem', maxWidth: '1100px', margin: '0 auto' },
+    title: { fontFamily: "'Georgia', serif", fontSize: '2rem', textAlign: 'center', marginBottom: '0.5rem' },
+    subtitle: { textAlign: 'center', color: colors.gold, letterSpacing: '0.25em', textTransform: 'uppercase', fontSize: '0.7rem', marginBottom: '2rem' },
+    grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' },
+    card: { background: colors.navyLight, border: `1px solid rgba(201,162,39,0.2)`, padding: '1.75rem', cursor: 'pointer' },
+    badge: { background: colors.gold, color: colors.navyDark, padding: '0.2rem 0.6rem', fontSize: '0.6rem', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 700, display: 'inline-block', marginBottom: '0.75rem' },
+    btn: { background: colors.gold, color: colors.navyDark, border: 'none', padding: '0.9rem 2rem', fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', cursor: 'pointer', fontWeight: 600 },
+    btnOutline: { background: 'transparent', border: `1px solid ${colors.gold}`, color: colors.gold, padding: '0.5rem 1rem', fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer' },
+    select: { background: colors.navyLight, border: `1px solid rgba(201,162,39,0.3)`, color: colors.cream, padding: '0.6rem 1.2rem', fontSize: '0.85rem' },
+    modal: { position: 'fixed', inset: 0, background: 'rgba(15,24,41,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, padding: '2rem' },
+    modalBox: { background: colors.navy, border: `1px solid ${colors.gold}`, maxWidth: '550px', width: '100%', maxHeight: '85vh', overflow: 'auto', padding: '2.5rem', position: 'relative' },
+    footer: { background: colors.navyDark, borderTop: `1px solid ${colors.navyLight}`, padding: '3rem 2rem', textAlign: 'center' }
+  };
+
+  const Nav = () => (
+    <nav style={s.nav}>
+      <div style={s.logo} onClick={() => setCurrentPage('home')}>Dentist's Son <span style={{fontSize: '0.6rem', opacity: 0.7, letterSpacing: '0.1em'}}>SANDWICH, MA</span></div>
+      <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+        {['shop', 'recipes', 'pairing', 'mealplans', 'cape', 'subscribe'].map(p => (
+          <button key={p} style={s.navLink} onClick={() => setCurrentPage(p)}>{p === 'cape' ? 'Cape Cod' : p === 'mealplans' ? 'Meals' : p}</button>
+        ))}
+        <button style={s.navLink} onClick={() => setCurrentPage('cart')}>Cart {cartCount > 0 && <span style={{ background: colors.gold, color: colors.navyDark, borderRadius: '50%', padding: '0.15rem 0.4rem', fontSize: '0.65rem', marginLeft: '0.3rem' }}>{cartCount}</span>}</button>
+      </div>
+    </nav>
+  );
+
+  const Home = () => (
+    <>
+      <div style={{ padding: '4rem 2rem', textAlign: 'center', background: colors.navyDark }}>
+        <Lighthouse size={100} />
+        <p style={{ color: colors.gold, letterSpacing: '0.3em', textTransform: 'uppercase', fontSize: '0.75rem', marginBottom: '0.75rem' }}>Cape Cod's Original FODMAP-Friendly Spice Rubs</p>
+        <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '2.75rem', marginBottom: '1rem' }}>Spice Without Sacrifice</h1>
+        <p style={{ fontStyle: 'italic', opacity: 0.85, maxWidth: '500px', margin: '0 auto 2rem' }}>Handcrafted in Sandwich, Massachusetts. No garlic. No onion. All flavor.</p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <button style={s.btn} onClick={() => setCurrentPage('shop')}>Shop the Collection</button>
+          <button style={s.btnOutline} onClick={() => setCurrentPage('cape')}>Our Cape Cod Story</button>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', maxWidth: '600px', margin: '3rem auto 0', textAlign: 'center' }}>
+          {[['0', 'Garlic or Onion'], ['100%', 'FODMAP Friendly'], ['6', 'Signature Blends'], ['1637', 'Town Founded']].map(([n, l]) => (
+            <div key={l}><div style={{ fontSize: '2rem', color: colors.gold }}>{n}</div><div style={{ fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', opacity: 0.7 }}>{l}</div></div>
+          ))}
+        </div>
+      </div>
+      <section style={s.section}>
+        <Lighthouse size={45} />
+        <p style={s.subtitle}>The Collection</p>
+        <h2 style={s.title}>Six Signature Blends</h2>
+        <div style={s.grid}>
+          {spices.slice(0, 3).map(sp => (
+            <div key={sp.id} style={s.card} onClick={() => setCurrentPage('shop')}>
+              <div style={s.badge}>{sp.subtitle}</div>
+              <h3 style={{ fontSize: '1.3rem', marginBottom: '0.5rem' }}>{sp.name}</h3>
+              <p style={{ opacity: 0.75, fontSize: '0.9rem', lineHeight: 1.6 }}>{sp.description}</p>
+            </div>
+          ))}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '2rem' }}><button style={s.btn} onClick={() => setCurrentPage('shop')}>View All Blends</button></div>
+      </section>
+    </>
+  );
+
+  const Shop = () => (
+    <section style={s.section}>
+      <Lighthouse size={45} />
+      <p style={s.subtitle}>The Collection</p>
+      <h2 style={s.title}>Six Signature Blends</h2>
+      <div style={s.grid}>
+        {spices.map(sp => (
+          <div key={sp.id} style={{...s.card, cursor: 'default'}}>
+            <div style={s.badge}>{sp.subtitle}</div>
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>{sp.name}</h3>
+            <p style={{ opacity: 0.75, fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '0.75rem' }}>{sp.description}</p>
+            <p style={{ fontSize: '0.7rem', opacity: 0.5, marginBottom: '1rem' }}>{sp.ingredients}</p>
+            <div style={{ marginBottom: '1rem' }}>{sp.bestFor.map(b => <span key={b} style={{ display: 'inline-block', background: 'rgba(201,162,39,0.15)', color: colors.gold, padding: '0.2rem 0.5rem', fontSize: '0.6rem', marginRight: '0.4rem', marginBottom: '0.4rem' }}>{b}</span>)}</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '1.3rem', color: colors.gold }}>${sp.price.toFixed(2)}</span>
+              <button style={s.btnOutline} onClick={() => addToCart(sp)}>Add to Cart</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+
+  const Recipes = () => (
+    <section style={s.section}>
+      <Lighthouse size={45} />
+      <p style={s.subtitle}>Recipe Discovery</p>
+      <h2 style={s.title}>Cook with Confidence</h2>
+      <p style={{ textAlign: 'center', opacity: 0.7, marginBottom: '1.5rem' }}>{recipes.length} FODMAP-friendly recipes</p>
+      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '2rem' }}>
+        <select style={s.select} value={recipeFilters.spice} onChange={e => setRecipeFilters({...recipeFilters, spice: e.target.value})}>
+          <option value="all">All Spices</option>
+          {spices.map(sp => <option key={sp.id} value={sp.id}>{sp.name}</option>)}
+        </select>
+        <select style={s.select} value={recipeFilters.protein} onChange={e => setRecipeFilters({...recipeFilters, protein: e.target.value})}>
+          <option value="all">All Proteins</option>
+          {['beef', 'pork', 'chicken', 'fish', 'vegetables'].map(p => <option key={p} value={p}>{p}</option>)}
+        </select>
+        <select style={s.select} value={recipeFilters.method} onChange={e => setRecipeFilters({...recipeFilters, method: e.target.value})}>
+          <option value="all">All Methods</option>
+          {['grill', 'smoke', 'oven', 'pan', 'slow'].map(m => <option key={m} value={m}>{m}</option>)}
+        </select>
+      </div>
+      <p style={{ textAlign: 'center', color: colors.gold, marginBottom: '1.5rem', fontSize: '0.85rem' }}>{filteredRecipes.length} recipes found</p>
+      <div style={s.grid}>
+        {filteredRecipes.map(r => (
+          <div key={r.id} style={s.card} onClick={() => setSelectedRecipe(r)}>
+            <div style={s.badge}>{spices.find(sp => sp.id === r.spice)?.name}</div>
+            <h3 style={{ fontSize: '1.15rem', marginBottom: '0.4rem' }}>{r.title}</h3>
+            <p style={{ opacity: 0.75, fontSize: '0.85rem', marginBottom: '0.75rem' }}>{r.description}</p>
+            <div>{[r.time, r.difficulty, r.method].map(t => <span key={t} style={{ display: 'inline-block', background: 'rgba(201,162,39,0.15)', color: colors.gold, padding: '0.2rem 0.5rem', fontSize: '0.6rem', marginRight: '0.4rem' }}>{t}</span>)}</div>
+          </div>
+        ))}
+      </div>
+      {selectedRecipe && (
+        <div style={s.modal} onClick={() => setSelectedRecipe(null)}>
+          <div style={s.modalBox} onClick={e => e.stopPropagation()}>
+            <button onClick={() => setSelectedRecipe(null)} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', color: colors.gold, fontSize: '1.5rem', cursor: 'pointer' }}>×</button>
+            <div style={s.badge}>{spices.find(sp => sp.id === selectedRecipe.spice)?.name}</div>
+            <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{selectedRecipe.title}</h2>
+            <p style={{ opacity: 0.8, marginBottom: '1rem' }}>{selectedRecipe.description}</p>
+            <div style={{ marginBottom: '1.5rem' }}>{[selectedRecipe.time, selectedRecipe.difficulty, selectedRecipe.method, selectedRecipe.protein].map(t => <span key={t} style={{ display: 'inline-block', background: 'rgba(201,162,39,0.15)', color: colors.gold, padding: '0.2rem 0.5rem', fontSize: '0.6rem', marginRight: '0.4rem' }}>{t}</span>)}</div>
+            <div style={{ height: '1px', background: `linear-gradient(90deg, transparent, ${colors.gold}40, transparent)`, margin: '1.5rem 0' }}></div>
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+              {selectedRecipe.servings && <span style={{ background: 'rgba(201,162,39,0.15)', color: colors.gold, padding: '0.3rem 0.6rem', fontSize: '0.7rem', borderRadius: '3px' }}>Serves {selectedRecipe.servings}</span>}
+            </div>
+            <h3 style={{ fontSize: '1rem', marginBottom: '0.75rem', color: colors.gold }}>Ingredients</h3>
+            <ul style={{ marginBottom: '1.5rem', paddingLeft: '1.25rem' }}>
+              {selectedRecipe.ingredients && selectedRecipe.ingredients.map((ing, i) => (
+                <li key={i} style={{ opacity: 0.9, fontSize: '0.85rem', marginBottom: '0.4rem', lineHeight: 1.4 }}>{ing}</li>
+              ))}
+            </ul>
+            <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: colors.gold }}>Instructions</h3>
+            {selectedRecipe.instructions.map((step, i) => (
+              <div key={i} style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                <div style={{ background: colors.navyLight, border: `1px solid ${colors.gold}`, color: colors.gold, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', flexShrink: 0 }}>{i + 1}</div>
+                <p style={{ opacity: 0.85, fontSize: '0.9rem', lineHeight: 1.5 }}>{step}</p>
+              </div>
+            ))}
+            {selectedRecipe.tips && (
+              <div style={{ background: 'rgba(201,162,39,0.1)', border: `1px solid rgba(201,162,39,0.3)`, padding: '1rem', marginTop: '1rem', borderRadius: '4px' }}>
+                <p style={{ fontSize: '0.85rem', color: colors.gold, marginBottom: '0.25rem', fontWeight: 600 }}>Pro Tip</p>
+                <p style={{ fontSize: '0.85rem', opacity: 0.9, lineHeight: 1.4 }}>{selectedRecipe.tips}</p>
+              </div>
+            )}
+            <div style={{ height: '1px', background: `linear-gradient(90deg, transparent, ${colors.gold}40, transparent)`, margin: '1.5rem 0' }}></div>
+            <button style={s.btn} onClick={() => { addToCart(spices.find(sp => sp.id === selectedRecipe.spice)); setSelectedRecipe(null); }}>Add {spices.find(sp => sp.id === selectedRecipe.spice)?.name} to Cart</button>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+
+  const Pairing = () => (
+    <section style={s.section}>
+      <Lighthouse size={45} />
+      <p style={s.subtitle}>Flavor Pairing Tool</p>
+      <h2 style={s.title}>Find Your Perfect Match</h2>
+      <div style={{ maxWidth: '450px', margin: '0 auto' }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', color: colors.gold, fontSize: '0.7rem', letterSpacing: '0.15em' }}>WHAT ARE YOU COOKING?</label>
+        <select style={{ ...s.select, width: '100%', marginBottom: '1.5rem' }} value={pairingProtein} onChange={e => setPairingProtein(e.target.value)}>
+          <option value="">Select a protein...</option>
+          {['beef', 'pork', 'chicken', 'fish', 'vegetables'].map(p => <option key={p} value={p}>{p}</option>)}
+        </select>
+        {pairingProtein && (
+          <>
+            <div style={{ height: '1px', background: `linear-gradient(90deg, transparent, ${colors.gold}40, transparent)`, margin: '1.5rem 0' }}></div>
+            <p style={{ color: colors.gold, fontSize: '0.7rem', letterSpacing: '0.15em', marginBottom: '1rem' }}>RECOMMENDED BLENDS</p>
+            {pairingMap[pairingProtein]?.map(id => {
+              const sp = spices.find(s => s.id === id);
+              return (
+                <div key={id} style={{ ...s.card, display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', cursor: 'default' }}>
+                  <div>
+                    <div style={{ ...s.badge, marginBottom: '0.4rem' }}>{sp.subtitle}</div>
+                    <h4 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>{sp.name}</h4>
+                    <p style={{ opacity: 0.7, fontSize: '0.8rem' }}>{sp.description}</p>
+                  </div>
+                  <button style={s.btnOutline} onClick={() => addToCart(sp)}>Add</button>
+                </div>
+              );
+            })}
+          </>
+        )}
+      </div>
+    </section>
+  );
+
+  const MealPlans = () => (
+    <section style={s.section}>
+      <Lighthouse size={45} />
+      <p style={s.subtitle}>FODMAP-Friendly Meal Planning</p>
+      <h2 style={s.title}>Eat Well All Week</h2>
+      <div style={s.grid}>
+        {Object.entries(mealPlans).map(([key, plan]) => (
+          <div key={key} style={s.card} onClick={() => setSelectedMealPlan(key)}>
+            <h3 style={{ fontSize: '1.2rem', marginBottom: '0.4rem' }}>{plan.name}</h3>
+            <p style={{ opacity: 0.75, fontSize: '0.9rem', marginBottom: '0.5rem' }}>{plan.description}</p>
+            <p style={{ color: colors.gold, fontSize: '0.8rem' }}>{plan.days.length} meals →</p>
+          </div>
+        ))}
+      </div>
+      {selectedMealPlan && (
+        <div style={s.modal} onClick={() => setSelectedMealPlan(null)}>
+          <div style={{ ...s.modalBox, maxWidth: '600px' }} onClick={e => e.stopPropagation()}>
+            <button onClick={() => setSelectedMealPlan(null)} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', color: colors.gold, fontSize: '1.5rem', cursor: 'pointer' }}>×</button>
+            <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{mealPlans[selectedMealPlan].name}</h2>
+            <p style={{ opacity: 0.8, marginBottom: '1.5rem' }}>{mealPlans[selectedMealPlan].description}</p>
+            {mealPlans[selectedMealPlan].days.map((day, i) => (
+              <div key={i} style={{ background: colors.navyLight, padding: '1rem', marginBottom: '0.5rem', border: `1px solid rgba(201,162,39,0.15)` }}>
+                <p style={{ color: colors.gold, fontSize: '0.65rem', letterSpacing: '0.15em', marginBottom: '0.3rem' }}>{day.day.toUpperCase()}</p>
+                <h4 style={{ fontSize: '1rem', marginBottom: '0.2rem' }}>{day.recipe}</h4>
+                <p style={{ opacity: 0.7, fontSize: '0.8rem' }}><span style={{ color: colors.gold }}>{spices.find(s => s.id === day.spice)?.name}</span> · {day.side}</p>
+              </div>
+            ))}
+            <div style={{ height: '1px', background: `linear-gradient(90deg, transparent, ${colors.gold}40, transparent)`, margin: '1.5rem 0' }}></div>
+            <button style={s.btn} onClick={() => { [...new Set(mealPlans[selectedMealPlan].days.map(d => d.spice))].forEach(id => addToCart(spices.find(s => s.id === id))); setSelectedMealPlan(null); }}>Add All Spices to Cart</button>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+
+  const CapeCod = () => (
+    <section style={s.section}>
+      <Lighthouse size={60} />
+      <p style={s.subtitle}>Our Roots</p>
+      <h2 style={s.title}>Cape Cod Heritage</h2>
+      
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 0, marginBottom: '2rem', borderBottom: `1px solid ${colors.navyLight}` }}>
+        {Object.entries(capeContent).map(([key, c]) => (
+          <button key={key} onClick={() => setCapeSection(key)} style={{ padding: '0.6rem 1.25rem', background: 'none', border: 'none', color: capeSection === key ? colors.gold : colors.cream, cursor: 'pointer', fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase', opacity: capeSection === key ? 1 : 0.6, borderBottom: capeSection === key ? `2px solid ${colors.gold}` : 'none' }}>{key === 'kettleers' ? 'The Kettleers' : key === 'capeCod' ? 'Cape Cod' : 'Sandwich'}</button>
+        ))}
+      </div>
+
+      <div style={{ maxWidth: '750px', margin: '0 auto' }}>
+        <p style={{ color: colors.gold, fontSize: '0.65rem', letterSpacing: '0.2em', marginBottom: '0.4rem', textAlign: 'center' }}>{capeContent[capeSection].subtitle.toUpperCase()}</p>
+        <h3 style={{ fontSize: '1.75rem', marginBottom: '2rem', textAlign: 'center' }}>{capeContent[capeSection].title}</h3>
+        
+        {capeContent[capeSection].sections.map((section, i) => (
+          <div key={i} style={{ marginBottom: '2.5rem' }}>
+            <h4 style={{ color: colors.gold, fontSize: '1.1rem', marginBottom: '1rem', borderBottom: `1px solid ${colors.navyLight}`, paddingBottom: '0.5rem' }}>{section.heading}</h4>
+            {section.content.split('\n\n').map((para, j) => (
+              <p key={j} style={{ opacity: 0.85, fontSize: '0.95rem', lineHeight: 1.75, marginBottom: '1rem', textAlign: 'justify' }}>{para}</p>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <div style={{ height: '1px', background: `linear-gradient(90deg, transparent, ${colors.gold}40, transparent)`, margin: '2.5rem auto', maxWidth: '500px' }}></div>
+      
+      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+        <h3 style={{ textAlign: 'center', fontSize: '1.25rem', marginBottom: '2rem', color: colors.gold }}>Cape Cod By The Numbers</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', textAlign: 'center' }}>
+          {[
+            ['1637', 'Sandwich Founded'],
+            ['65', 'Miles of Cape'],
+            ['1,600+', 'MLB Alumni from Cape League'],
+            ['17', 'Kettleers Championships']
+          ].map(([n, l]) => (
+            <div key={l} style={{ padding: '1rem', background: colors.navyLight, border: `1px solid rgba(201,162,39,0.2)` }}>
+              <div style={{ fontSize: '1.75rem', color: colors.gold, marginBottom: '0.25rem' }}>{n}</div>
+              <div style={{ fontSize: '0.6rem', letterSpacing: '0.1em', textTransform: 'uppercase', opacity: 0.6 }}>{l}</div>
+            </div>
+          ))}
+        </div>
+        
+        <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', textAlign: 'center' }}>
+          {[
+            ['1825', 'Glass Factory Founded'],
+            ['1914', 'Cape Cod Canal Opened'],
+            ['29-11-3', '1995 Kettleers Record'],
+            ['1885', 'Cape League Est.']
+          ].map(([n, l]) => (
+            <div key={l} style={{ padding: '1rem', background: colors.navyLight, border: `1px solid rgba(201,162,39,0.2)` }}>
+              <div style={{ fontSize: '1.75rem', color: colors.gold, marginBottom: '0.25rem' }}>{n}</div>
+              <div style={{ fontSize: '0.6rem', letterSpacing: '0.1em', textTransform: 'uppercase', opacity: 0.6 }}>{l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+
+  const Subscribe = () => (
+    <section style={s.section}>
+      <Lighthouse size={45} />
+      <p style={s.subtitle}>Subscribe & Save</p>
+      <h2 style={s.title}>Build Your Spice Box</h2>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', marginBottom: '2.5rem' }}>
+        {[1, 2, 3].map(step => (
+          <div key={step} style={{ width: '36px', height: '36px', borderRadius: '50%', background: subscriptionStep >= step ? colors.gold : colors.navyLight, color: subscriptionStep >= step ? colors.navyDark : colors.gold, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 600, border: `1px solid ${colors.gold}` }}>{step}</div>
+        ))}
+      </div>
+      <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+        {subscriptionStep === 1 && (
+          <>
+            <h3 style={{ fontSize: '1.15rem', marginBottom: '1.25rem' }}>Choose Your Frequency</h3>
+            {[{ id: 'monthly', label: 'Monthly', discount: '10% off' }, { id: 'bimonthly', label: 'Every 2 Months', discount: '7% off' }, { id: 'quarterly', label: 'Quarterly', discount: '5% off' }].map(opt => (
+              <div key={opt.id} onClick={() => setSubFrequency(opt.id)} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1rem', border: subFrequency === opt.id ? `1px solid ${colors.gold}` : `1px solid ${colors.navyLight}`, background: subFrequency === opt.id ? colors.navyLight : 'transparent', marginBottom: '0.75rem', cursor: 'pointer' }}>
+                <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: `2px solid ${colors.gold}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{subFrequency === opt.id && <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: colors.gold }}></div>}</div>
+                <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between' }}><span>{opt.label}</span><span style={{ color: colors.gold }}>{opt.discount}</span></div>
+              </div>
+            ))}
+            <button style={{ ...s.btn, width: '100%', marginTop: '1.5rem' }} onClick={() => setSubscriptionStep(2)}>Continue</button>
+          </>
+        )}
+        {subscriptionStep === 2 && (
+          <>
+            <h3 style={{ fontSize: '1.15rem', marginBottom: '0.5rem' }}>Select Your Blends</h3>
+            <p style={{ opacity: 0.7, marginBottom: '1.25rem', fontSize: '0.9rem' }}>Choose 3-6 blends for your box.</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
+              {spices.map(sp => (
+                <div key={sp.id} onClick={() => subSpices.includes(sp.id) ? setSubSpices(subSpices.filter(s => s !== sp.id)) : subSpices.length < 6 && setSubSpices([...subSpices, sp.id])} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.85rem', border: subSpices.includes(sp.id) ? `1px solid ${colors.gold}` : `1px solid ${colors.navyLight}`, background: subSpices.includes(sp.id) ? colors.navyLight : 'transparent', cursor: 'pointer' }}>
+                  <div style={{ width: '18px', height: '18px', border: `2px solid ${colors.gold}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{subSpices.includes(sp.id) && <span style={{ color: colors.gold, fontSize: '0.75rem' }}>✓</span>}</div>
+                  <div><div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{sp.name}</div><div style={{ fontSize: '0.65rem', color: colors.gold }}>{sp.subtitle}</div></div>
+                </div>
+              ))}
+            </div>
+            <p style={{ textAlign: 'center', margin: '1rem 0', opacity: 0.6 }}>{subSpices.length}/6 selected</p>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button style={{ ...s.btnOutline, flex: 1 }} onClick={() => setSubscriptionStep(1)}>Back</button>
+              <button style={{ ...s.btn, flex: 2, opacity: subSpices.length < 3 ? 0.5 : 1 }} onClick={() => subSpices.length >= 3 && setSubscriptionStep(3)} disabled={subSpices.length < 3}>Continue</button>
+            </div>
+          </>
+        )}
+        {subscriptionStep === 3 && (
+          <>
+            <h3 style={{ fontSize: '1.15rem', marginBottom: '1.25rem' }}>Your Subscription</h3>
+            <div style={{ background: colors.navyLight, padding: '1rem', marginBottom: '1rem', border: `1px solid rgba(201,162,39,0.2)` }}>
+              <p style={{ color: colors.gold, fontSize: '0.65rem', letterSpacing: '0.15em', marginBottom: '0.3rem' }}>FREQUENCY</p>
+              <p>{subFrequency === 'monthly' ? 'Monthly' : subFrequency === 'bimonthly' ? 'Every 2 Months' : 'Quarterly'}</p>
+            </div>
+            <div style={{ background: colors.navyLight, padding: '1rem', marginBottom: '1rem', border: `1px solid rgba(201,162,39,0.2)` }}>
+              <p style={{ color: colors.gold, fontSize: '0.65rem', letterSpacing: '0.15em', marginBottom: '0.5rem' }}>YOUR BLENDS</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>{subSpices.map(id => <span key={id} style={s.badge}>{spices.find(s => s.id === id)?.name}</span>)}</div>
+            </div>
+            <div style={{ background: colors.navyLight, padding: '1rem', marginBottom: '1.5rem', border: `1px solid rgba(201,162,39,0.2)` }}>
+              <p style={{ color: colors.gold, fontSize: '0.65rem', letterSpacing: '0.15em', marginBottom: '0.3rem' }}>BOX TOTAL</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '1.4rem', color: colors.gold }}>${(subSpices.reduce((sum, id) => sum + (spices.find(s => s.id === id)?.price || 0), 0) * (subFrequency === 'monthly' ? 0.9 : subFrequency === 'bimonthly' ? 0.93 : 0.95)).toFixed(2)}</span>
+                <span style={{ color: colors.gold, fontSize: '0.8rem' }}>{subFrequency === 'monthly' ? '10%' : subFrequency === 'bimonthly' ? '7%' : '5%'} savings</span>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button style={{ ...s.btnOutline, flex: 1 }} onClick={() => setSubscriptionStep(2)}>Back</button>
+              <button style={{ ...s.btn, flex: 2 }}>Start Subscription</button>
+            </div>
+          </>
+        )}
+      </div>
+    </section>
+  );
+
+  const Cart = () => (
+    <section style={s.section}>
+      <Lighthouse size={45} />
+      <p style={s.subtitle}>Your Order</p>
+      <h2 style={s.title}>Shopping Cart</h2>
+      {cart.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
+          <p style={{ opacity: 0.7, marginBottom: '1.5rem' }}>Your cart is empty.</p>
+          <button style={s.btn} onClick={() => setCurrentPage('shop')}>Shop the Collection</button>
+        </div>
+      ) : (
+        <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+          {cart.map(item => (
+            <div key={item.id} style={{ ...s.card, display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', cursor: 'default' }}>
+              <div>
+                <div style={{ ...s.badge, marginBottom: '0.4rem' }}>{item.subtitle}</div>
+                <h4 style={{ fontSize: '1.05rem' }}>{item.name}</h4>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <button style={{ ...s.btnOutline, padding: '0.2rem 0.5rem' }} onClick={() => item.quantity > 1 ? setCart(cart.map(i => i.id === item.id ? { ...i, quantity: i.quantity - 1 } : i)) : setCart(cart.filter(i => i.id !== item.id))}>−</button>
+                  <span>{item.quantity}</span>
+                  <button style={{ ...s.btnOutline, padding: '0.2rem 0.5rem' }} onClick={() => setCart(cart.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i))}>+</button>
+                </div>
+                <span style={{ fontSize: '1.2rem', color: colors.gold }}>${(item.price * item.quantity).toFixed(2)}</span>
+              </div>
+            </div>
+          ))}
+          <div style={{ height: '1px', background: `linear-gradient(90deg, transparent, ${colors.gold}40, transparent)`, margin: '1.5rem 0' }}></div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <span>Total</span>
+            <span style={{ fontSize: '1.75rem', color: colors.gold }}>${cartTotal.toFixed(2)}</span>
+          </div>
+          <button style={{ ...s.btn, width: '100%' }}>Proceed to Checkout</button>
+          <p style={{ textAlign: 'center', marginTop: '1rem', opacity: 0.5, fontSize: '0.8rem' }}>Free shipping over $50 · Ships from Sandwich, MA</p>
+        </div>
+      )}
+    </section>
+  );
+
+  const Footer = () => (
+    <footer style={s.footer}>
+      <Lighthouse size={50} />
+      <div style={{ fontSize: '1.3rem', color: colors.gold, marginBottom: '0.4rem' }}>Dentist's Son</div>
+      <p style={{ opacity: 0.6, fontSize: '0.85rem', marginBottom: '0.3rem' }}>Spice without sacrifice. Handcrafted in Sandwich, Massachusetts.</p>
+      <p style={{ opacity: 0.5, fontSize: '0.75rem' }}>Cape Cod's Original FODMAP-Friendly Spice Rubs</p>
+      <div style={{ height: '1px', background: `linear-gradient(90deg, transparent, ${colors.gold}30, transparent)`, margin: '1.5rem auto', maxWidth: '300px' }}></div>
+      <p style={{ opacity: 0.4, fontSize: '0.7rem' }}>Sandwich, MA · Cape Cod Baseball League Championship Family · Est. 2025</p>
+    </footer>
+  );
+
+  const pages = { home: Home, shop: Shop, recipes: Recipes, pairing: Pairing, mealplans: MealPlans, cape: CapeCod, subscribe: Subscribe, cart: Cart };
+  const Page = pages[currentPage] || Home;
+
+  return (
+    <div style={s.app}>
+      <Nav />
+      <Page />
+      <Footer />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<DentistsSonApp />);
+  </script>
+</body>
+</html>
